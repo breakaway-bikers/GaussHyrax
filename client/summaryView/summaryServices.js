@@ -155,7 +155,7 @@ angular.module('SummaryServicesModule', [])
 
       //store this data by _id so it can be retrieved/updated later
       this.pointGraph[family[i]['_id']] = series.linePlot.slice();
-      this.currentPointValue[family[i]['_id']] = series.linePlot[series.linePlot.length-1];
+      this.currentPointValue[family[i]['_id']] = series.linePlot[series.linePlot.length - 1];
       this.actionsDonut[family[i]['_id']] = series.donutPlot.slice();
       familyLookUp[family[i]['_id']] = family[i];
 
@@ -173,7 +173,7 @@ angular.module('SummaryServicesModule', [])
         }
 
         //push history onto that date's array so multiple history items can be stored
-        historyLookUp[family[i]['_id']][prettyDate].push(_.extend(family[i].history[j],{name:family[i].firstName + ' ' + family[i].lastName}));
+        historyLookUp[family[i]['_id']][prettyDate].push(_.extend(family[i].history[j], { name:family[i].firstName + ' ' + family[i].lastName }));
       }
 
     };
@@ -226,7 +226,7 @@ angular.module('SummaryServicesModule', [])
       historyLookUp[id][prettyDate] = [];
     }
 
-    historyLookUp[id][prettyDate].push(_.extend(historyEvent,{name:familyLookUp[id].firstName + ' ' + familyLookUp[id].lastName}));
+    historyLookUp[id][prettyDate].push(_.extend(historyEvent, { name: familyLookUp[id].firstName + ' ' + familyLookUp[id].lastName }));
 
     //--------------------------
     //modify graph
@@ -292,121 +292,122 @@ angular.module('SummaryServicesModule', [])
 
         bindto: '#chart',
         size: {
-          height: 240
+          height: 240,
         },
         data:{
           x:'x',
           columns: data.linePlot, //this is the data
-          type: 'area'
+          type: 'area',
         },
         axis: {
           x: {
-              type: 'category', // this needed to load string x value
-              label: {
-                text: 'time',
-                position: 'outer-center'
-              }
+            type: 'category',// this needed to load string x value
+            label: {
+              text: 'time',
+              position: 'outer-center',
+            },
           },
           y: {
             label: {
                 text: 'points',
-                position: 'outer-middle'
-              }
-          }
+                position: 'outer-middle',
+              },
+          },
         },
         grid: {
           x: {
-            lines: xLines
-          }
+            lines: xLines,
+          },
         },
         legend: {
-          hide: true
+          hide: true,
         },
         subchart: {
           show: true,
           size: {
-            height: 20
-          }
+            height: 20,
+          },
         },
         zoom: {
-          enabled: true
+          enabled: true,
         },
         transition: {
-          duration: 1000
+          duration: 1000,
         },
         tooltip: {
           format:{
-            name: function (name, ratio, id, index) {
+            name: function(name, ratio, id, index) {
               //this brings up the data into the tooltip hover
 
               //use historyLookUp to access tasks done on this date
-              var tasks = historyLookUp[id][factory.xLabels[index+1]];
-              var displayStr = "";
+              var tasks = historyLookUp[id][factory.xLabels[index + 1]];
+              var displayStr = '';
 
               //no tasks done, so just display name
-              if(!tasks){
-                return familyLookUp[id].firstName + ' ' + familyLookUp[id].lastName ;
+              if (!tasks) {
+                return familyLookUp[id].firstName + ' ' + familyLookUp[id].lastName;
               }
 
               //tasks were done, so display task info that was stored
               displayStr += tasks[0].name + '<br>';
               for (var i = 0; i < tasks.length; i++) {
-                  displayStr += '<b>' + tasks[i].action +
+                displayStr += '<b>' + tasks[i].action +
                   ' (+' + tasks[i].points + ' pts)' + '</b><br>"' +
-                  tasks[i].notes + '"<br>' ;
+                  tasks[i].notes + '"<br>';
               }
+
               return displayStr;
-             }
+            },
           },
-           grouped: false // Default true
-         }
+          grouped: false,// Default true
+        },
       });
 
       //zoom to the last 4 weeks
-      $timeout(function(){
-        if(data.linePlot[0]){
-          chart.zoom([data.linePlot[0].length-28, data.linePlot[0].length-1])
+      $timeout(function() {
+        if (data.linePlot[0]) {
+          chart.zoom([data.linePlot[0].length - 28, data.linePlot[0].length - 1]);
         }
-      },1000);
+      }, 1000);
     }
 
     //--------------------
     //DONUT PLOT
 
     //just load data in and don't re-create it
-    if(donut && !refresh){
+    if (donut && !refresh) {
       donut.load({
         columns:data.donutPlot,
-        unload:true
+        unload:true,
       });
-    }else{
+    } else {
       //build the whole chart anew
       donut = c3.generate({
         bindto: '#donut',
         size: {
           height:240,
-          width: 240
+          width: 240,
         },
         data:{
           columns: data.donutPlot,    //this is the data
-          type: 'donut'
+          type: 'donut',
         },
         donut:{
           label:{
-            format: function(value, ratio){
-              return  value;
-            }
-          }
+            format: function(value, ratio) {
+              return value;
+            },
+          },
         },
         legend:{
-          position:'bottom'
+          position:'bottom',
         },
-         transition: {
-          duration: 1500
-        }
+        transition: {
+          duration: 1500,
+        },
       });
     }
   };
-  return factory;
 
-}])
+  return factory;
+}]);
