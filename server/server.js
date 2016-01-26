@@ -34,7 +34,7 @@ var configHandler = function(successCode,failCode,res){
 //CREATE
 //////////////////////////////////////////
 
-//save a user to DB 
+//save a user to DB
 app.post('/api/user', function (req, res, next){
   db.addUser(req.body, configHandler(201,400,res));
   sendgrid.send({
@@ -75,12 +75,12 @@ app.post('/api/user', function (req, res, next){
 })
 
 // find a user
-.get('/api/user/:userName/:password', function (req, res, next){
+.get('/api/user/:userName/:password', function (req, res, next) {
   db.verifyUser(req.params, configHandler(200,404,res));
 })
 
 //get all family info for a user
-.get('/api/family/:userId',function(req,res,next){
+.get('/api/family/:userId', function(req, res, next) {
   db.getAllFamily(req.params, configHandler(200,400,res));
 })
 
