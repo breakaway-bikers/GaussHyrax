@@ -8,11 +8,10 @@ var env = require('node-env-file');
 //   env(__dirname + '/.env')
 // } 
 
-  // env(__dirname + '/.env')
-
-
+env(__dirname + '/.env')
 
 var sendgrid  = require('sendgrid')(process.env.SENDGRIDAPIKEY);
+
 console.log('\n\n\nHERE IS THE SEND GRID API KEY', process.env.SENDGRIDAPIKEY, '\n\n\n');
 
 var port = process.env.PORT || 3000;
