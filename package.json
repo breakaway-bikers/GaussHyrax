@@ -28,9 +28,14 @@
     "body-parser": "^1.14.2",
     "bower": "^1.7.2",
     "express": "^4.13.3",
+    "kerberos": "0.0.18",
     "moment": "^2.11.1",
+    "mongodb": "^2.1.4",
     "mongoose": "^4.3.5",
     "morgan": "^1.6.1",
     "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "sendgrid": "^2.0.0"
   }
 }
