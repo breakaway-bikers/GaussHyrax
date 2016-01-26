@@ -32,6 +32,15 @@ var configHandler = function(successCode,failCode,res){
 //save a user to DB 
 app.post('/api/user', function (req, res, next){
   db.addUser(req.body, configHandler(201,400,res));
+  sendgrid.send({
+    to:       'jwtippens@gmail.com',
+    from:     'diyelpin@gmail.com',
+    subject:  'Hello World',
+    text:     'My first email through SendGrid.'
+  }, function(err, json) {
+    if (err) { return console.error(err); }
+    console.log(json);
+  });
 })
 
 //add new family member to user
@@ -104,6 +113,15 @@ app.post('/api/user', function (req, res, next){
 //delete family member
 .delete('/api/family/:userId/:familyId',function (req,res,next){
   db.deleteFamilyMember(req.params, configHandler(201,400,res));
+  sendgrid.send({
+    to:       'jwtippens@gmail.com',
+    from:     'diyelpin@gmail.com',
+    subject:  'Hello World',
+    text:     'My first email through SendGrid.'
+  }, function(err, json) {
+    if (err) { return console.error(err); }
+    console.log(json);
+  });
 })
 
 //delete history
