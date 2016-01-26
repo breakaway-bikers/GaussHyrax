@@ -154,7 +154,7 @@ angular.module('gaussHyrax.family', ['FamilyServices'])
     // When the user clicks the Family Member, we want to update the Summary View, to show the
     // interactions with that family Member and show the individual Graph, Points and Donut Graph.
     $scope.singleFamilyMemberInfo = function(familyMemberObj) {
-      console.log('this is the sinlge familyMemberObj', familyMemberObj);
+      console.log('this is the single familyMemberObj', familyMemberObj);
 
       //change the $scope.activeFamilyMember so that a $watch event will fire
       $scope.activeFamilyMember = familyMemberObj;
