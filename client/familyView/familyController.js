@@ -172,6 +172,7 @@ angular.module('gaussHyrax.family', ['FamilyServices'])
       familyMemberObj.history = [];
       console.log('post emptying array', familyMemberObj);
       $scope.$broadcast('familyChange', familyMemberObj);
+      FamilyFactory.updateMember(familyMemberObj);
     }
   }])
 
