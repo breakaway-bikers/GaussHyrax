@@ -2,8 +2,9 @@ var express = require('express');
 var db = require('./db.js');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
-require('env.js');
-var sendgrid  = require('sendgrid')(apikey);
+var dotenv = require('dotenv');
+dotenv.load();
+var sendgrid  = require('sendgrid')(process.env.sendgrid_apikey);
 
 var port = process.env.PORT || 3000;
 
