@@ -2,6 +2,8 @@ var express = require('express');
 var db = require('./db.js');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
+var apikey = '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';
+var sendgrid  = require('sendgrid')(apikey);
 
 var port = process.env.PORT || 3000;
 
@@ -45,6 +47,17 @@ app.post('/api/user', function (req, res, next){
 //////////////////////////////////////////
 //READ
 //////////////////////////////////////////
+.get('/grid',function(req,res,next){
+    sendgrid.send({
+    to:       'jwtippens@gmail.com',
+    from:     'diyelpin@gmail.com',
+    subject:  'Hello World',
+    text:     'My first email through SendGrid.'
+  }, function(err, json) {
+    if (err) { return console.error(err); }
+    console.log(json);
+  });
+})
 
 // find a user
 .get('/api/user/:userName/:password', function (req, res, next){
