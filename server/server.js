@@ -2,7 +2,7 @@ var express = require('express');
 var db = require('./db.js');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
-var apikey = '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';
+require('env.js');
 var sendgrid  = require('sendgrid')(apikey);
 
 var port = process.env.PORT || 3000;
