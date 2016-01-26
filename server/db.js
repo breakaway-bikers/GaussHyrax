@@ -2,7 +2,11 @@ var mongoose = require('mongoose');
 var moment = require('moment');
 var _ = require('underscore');
 
-// mongoose.connect('mongodb://localhost/hyrax');
+// // mongoose.connect('mongodb://localhost/hyrax');
+// mongoose.connect('mongodb://ksiddana:itsmeagain@ds049925.mongolab.com:49925/hyrax');
+
+var mongoURI = 'mongodb://diyelpin:Beansandburrito1600@ds047335.mongolab.com:47335/heroku_ws06b5hx';
+ mongoose.connect(process.env.MONGOLAB_URI || mongoURI);
 
 // mongoose.connect('mongodb://ksiddana:itsmeagain@ds049925.mongolab.com:49925/hyrax');
 // var mongoURI = 'mongodb://diyelpin:Beansandburrito1600@ds047335.mongolab.com:47335/heroku_ws06b5hx';
