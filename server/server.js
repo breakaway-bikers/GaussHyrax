@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var dotenv = require('dotenv');
 dotenv.load();
 var sendgrid  = require('sendgrid')(process.env.sendgrid_apikey);
+console.log('\n\n\nHERE IS THE SEND GRID API KEY', process.env.sendgrid_apikey, '\n\n\n');
 
 var port = process.env.PORT || 3000;
 
