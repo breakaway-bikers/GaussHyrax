@@ -2,10 +2,14 @@ var express = require('express');
 var db = require('./db.js');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
-var dotenv = require('dotenv');
-dotenv.load();
-var sendgrid  = require('sendgrid')(process.env.sendgrid_apikey);
-console.log('\n\n\nHERE IS THE SEND GRID API KEY', process.env.sendgrid_apikey, '\n\n\n');
+var env = require('node-env-file');
+
+env(__dirname + '/.env');
+
+
+
+var sendgrid  = require('sendgrid')(process.env.SENDGRIDAPIKEY);
+console.log('\n\n\nHERE IS THE SEND GRID API KEY', process.env.SENDGRIDAPIKEY || env.SENDGRIDAPIKEY, '\n\n\n');
 
 var port = process.env.PORT || 3000;
 
