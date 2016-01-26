@@ -3,8 +3,10 @@ var moment = require('moment');
 var _ = require('underscore');
 
 // mongoose.connect('mongodb://localhost/hyrax');
-mongoose.connect('mongodb://ksiddana:itsmeagain@ds049925.mongolab.com:49925/hyrax');
-
+// mongoose.connect('mongodb://ksiddana:itsmeagain@ds049925.mongolab.com:49925/hyrax');
+// var mongoURI = 'mongodb://diyelpin:Beansandburrito1600@ds047335.mongolab.com:47335/heroku_ws06b5hx';
+var mongoURI = 'mongodb://diyelpin:Beansandburrito1600@ds051595.mongolab.com:51595/heroku_14zh7mth'
+mongoose.connect(process.env.MONGOLAB_URI || mongoURI);
 var db = mongoose.connection;
 
 var exports = module.exports;
@@ -47,7 +49,7 @@ db.once('open', function() {
     family:[FamilySchema]
   });
 
-  //store the possible actions 
+  //store the possible actions
   //will be its own independent doc/collection
   var ActionSchema = mongoose.Schema({
     points: Number,
@@ -146,7 +148,7 @@ db.once('open', function() {
     }
     ]
   };
-  
+
   User.create([user1]);
 
   //handles the different possible 'action' values
@@ -163,7 +165,7 @@ db.once('open', function() {
     "add family": function(user, callback, properties){
       user.family.push(properties);
       user.save(function(err,user){
-        return callback(err,user.family[user.family.length-1]); 
+        return callback(err,user.family[user.family.length-1]);
       });
     },
     "update family": function(user, callback, properties, familyMember){
@@ -172,7 +174,7 @@ db.once('open', function() {
       }
       _.extend(familyMember,properties);
       user.save(function(err,user){
-        return callback(err,familyMember); 
+        return callback(err,familyMember);
       });
     },
     "add history":function(user, callback, properties, familyMember){
@@ -181,7 +183,7 @@ db.once('open', function() {
       }
       //save history into model
       familyMember.history.push(properties);
-      
+
       //update nextContactDate, if action is within 5 days of the current nextContactDate
       if(Math.abs(moment.duration(moment(properties.date).diff(familyMember.nextContactDate)).days()) < 5 ){
         familyMember.nextContactDate = moment(familyMember.nextContactDate).add(familyMember.contactFrequency,'days');
@@ -189,7 +191,7 @@ db.once('open', function() {
 
       //save it!
       user.save(function(err,user){
-        return callback(err,{nextContactDate: familyMember.nextContactDate, historyItem:familyMember.history[familyMember.history.length-1]}); 
+        return callback(err,{nextContactDate: familyMember.nextContactDate, historyItem:familyMember.history[familyMember.history.length-1]});
       });
 
     },
@@ -201,7 +203,7 @@ db.once('open', function() {
         return user === familyMember;
       });
       user.save(function(err,user){
-        return callback(err,familyMember); 
+        return callback(err,familyMember);
       });
     },
     "update history": function(user, callback, properties, familyMember, historyEvent){
@@ -210,7 +212,7 @@ db.once('open', function() {
       }
       _.extend(historyEvent,properties);
       user.save(function(err,user){
-        return callback(err,historyEvent); 
+        return callback(err,historyEvent);
       });
     },
     "delete history": function(user, callback, properties, familyMember, historyEvent){
@@ -221,8 +223,8 @@ db.once('open', function() {
         return event === historyEvent;
       });
       user.save(function(err,user){
-        return callback(err,historyEvent); 
-      }); 
+        return callback(err,historyEvent);
+      });
     }
   }
 
@@ -230,14 +232,14 @@ db.once('open', function() {
   var accessUserById = function(ids,action,properties,callback){
 
     return User.findOne({_id:ids.userId},'family',function(err,user){
-      
+
       //check for error and make sure we have a valid user
       if(err){
         return callback(err,null);
       }else if(!user){
         return callback('user _id ' + ids.userId + ' not found',null);
       }
-      
+
       //lookup family id, if provided
       var familyMember;
 
@@ -281,13 +283,13 @@ db.once('open', function() {
       return callback('userName field required',null);
     }
 
-    var user = new User(userObj); 
+    var user = new User(userObj);
 
     user.save(function (err, user){
       return callback(err,user);
     });
   };
-  
+
   exports.addFamilyMember = function(idObj,familyObj,callback){
     return accessUserById(idObj,"add family",familyObj,callback);
   };
@@ -295,7 +297,7 @@ db.once('open', function() {
   exports.addHistory = function(idObj, historyObj, callback){
     return accessUserById(idObj,"add history",historyObj,callback);
   };
-  
+
 //////////////////////////////////////////
 //READ
 //////////////////////////////////////////
