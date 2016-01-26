@@ -19,7 +19,7 @@
     <div id="donut"></div>
 
     <div class="actionWrapper">
-      <h2>Notes</h2><button ng-click="clearHistory()">clear</button>
+      <h2>Notes</h2><span><button ng-click="clearHistory()">clear</button></span>
       <div class="scrollBox">
         <ul class="actionList">
           <li class="actionItem" ng-repeat="action in activeFamilyMember.history | orderBy:'-date'">
