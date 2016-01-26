@@ -4,7 +4,11 @@ var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var env = require('node-env-file');
 
-env(__dirname + '/.env');
+if( (__dirname + '/.env') ){
+  env(__dirname + '/.env')
+} 
+
+  // env(__dirname + '/.env')
 
 
 
