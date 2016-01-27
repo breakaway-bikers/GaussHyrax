@@ -8,7 +8,7 @@
         <div ng-show="activeFamilyMember._id" class="contactFreq">{{activeFamilyMember.contactFrequency}} days</div>
     </div>
     <div class="contactInfo">
-    <img src="assets/batman.jpg" class="familyImg" ng-show="activeFamilyMember._id">
+      <img ng-src={{activeFamilyMember.image}} class="familyImg" ng-show="activeFamilyMember._id">
       <ul>
         <li class="email">{{activeFamilyMember.streetAddress}}</li>
         <li ng-show="activeFamilyMember.city" class="email">{{activeFamilyMember.city}} {{activeFamilyMember.state}}, {{activeFamilyMember.zipcode}}</li>
