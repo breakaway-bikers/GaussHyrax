@@ -2,6 +2,13 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
 
 .controller('summaryCtrl', ['$scope', 'SummaryFactory', function($scope, SummaryFactory) {
 
+  $scope.mapFlag = false;
+
+  $scope.showmap = function(){
+    $scope.mapFlag = !$scope.mapFlag;
+    console.log('The mapflag is ', $scope.mapFlag);
+  };
+
   //shows modal when edit button is clicked
   $scope.editMember = function() {
     $scope.$parent.toggleModal();
