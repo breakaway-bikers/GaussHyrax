@@ -14,6 +14,11 @@
         <li ng-show="activeFamilyMember.city" class="email">{{activeFamilyMember.city}} {{activeFamilyMember.state}}, {{activeFamilyMember.zipcode}}</li>
         <li class="email">{{activeFamilyMember.country}}</li>
       </ul>
+      <button ng-click="showmap(activeFamilyMember)" ng-show="!mapFlag" ng-model="activeFamilyMember">Show Distance</button>
+      <button ng-click="toggleMap()" ng-show="mapFlag">Close Map</button>
+      <article ng-show="mapFlag">
+
+      </article>
     </div>
     <div id="chart"></div>
     <div id="donut"></div>

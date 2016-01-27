@@ -8,9 +8,9 @@ var env = require('node-env-file');
 
 
 
-//env(__dirname + '/.env')
+// env(__dirname + '/.env')
 
-var sendgrid  = require('sendgrid')(process.env.SENDGRIDAPIKEY);
+var sendgrid = require('sendgrid')(process.env.SENDGRIDAPIKEY);
 var GITHUB_CLIENT_ID = process.env.GITHUBCLIENTID;
 var GITHUB_CLIENT_SECRET = process.env.GITHUBCLIENTSECRET;
 console.log('\n\n\nHERE IS THE GITHUB CLIENT ID', process.env.GITHUBCLIENTID, '\n\n\n');
@@ -188,7 +188,7 @@ app.post('/api/user', function(req, res, next) {
 //delete family member
 .delete('/api/family/:userId/:familyId', function(req, res, next) {
   db.deleteFamilyMember(req.params, configHandler(201, 400, res));
-  
+
 })
 
 //delete history
