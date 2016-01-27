@@ -14,6 +14,8 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
     console.log('familyMember selected, changing graph...');
     if ($scope.activeFamilyMember._id) {
       var singlePlot = SummaryFactory.calculateGraphForOneFamilyMember($scope.activeFamilyMember['_id']);
+      //this is where I can pull the whole object and not just the ID.....
+      var weeklyPlot = SummaryFactory.calculateGraphForOnewithTimeframe($scope.activeFamilyMember, 'week');
       SummaryFactory.makeChart(singlePlot);
     } else {
       console.log('cannot plot, family member not specified');

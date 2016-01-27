@@ -13,6 +13,7 @@ angular.module('FamilyServices', [])
     })
     .then(function(res) {
       console.log('Getting the Family Members from with USER ID: ', id);
+      console.log('this is the res obj, inside of getAllFamilyMembers', res);
       return res;
     });
   },
