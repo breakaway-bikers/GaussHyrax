@@ -154,7 +154,7 @@ angular.module('gaussHyrax.family', ['FamilyServices'])
     // When the user clicks the Family Member, we want to update the Summary View, to show the
     // interactions with that family Member and show the individual Graph, Points and Donut Graph.
     $scope.singleFamilyMemberInfo = function(familyMemberObj) {
-      console.log('this is the sinlge familyMemberObj', familyMemberObj);
+      console.log('this is the single familyMemberObj', familyMemberObj);
 
       //change the $scope.activeFamilyMember so that a $watch event will fire
       $scope.activeFamilyMember = familyMemberObj;
@@ -168,12 +168,13 @@ angular.module('gaussHyrax.family', ['FamilyServices'])
     //----------this is Juan's Addition-------------
     //this visually clears the not notes in the app. I need to now send this info to the database and make sure all teh listeners are capturing it.
     $scope.clearHistory = function(familyMemberObj) {
-      console.log('pre clearing', familyMemberObj.history);
+      //console.log('pre clearing', familyMemberObj.history);
       familyMemberObj.history = [];
-      console.log('post emptying array', familyMemberObj);
+
+      //console.log('post emptying array', familyMemberObj);
       $scope.$broadcast('familyChange', familyMemberObj);
       FamilyFactory.updateMember(familyMemberObj);
-    }
+    };
   }])
 
 .directive('modalDialog', function() {
