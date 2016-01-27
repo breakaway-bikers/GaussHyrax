@@ -66,5 +66,19 @@ textarea {
   color:green;
 }
 
+.inlinebaby {
+  display: inline;
+}
+
+.inlinebaby2 {
+  display: inline;
+  margin: 15px 45px;
+}
+
+.narrow {
+  max-width: 250px;
+  float: right;
+}
+
 
 
