@@ -66,7 +66,9 @@ app.post('/api/user', function (req, res, next){
 //////////////////////////////////////////
 //READ
 //////////////////////////////////////////
-.get('/grid',function(req,res,next){
+.get('/api/grid',function(req,res,next){
+    console.log('\n\n\nREQUEST:', req.body, '\n\n\n');
+
     sendgrid.send({
     to:       'ruffaelb@gmail.com',
     from:     'diyelpin@gmail.com',

@@ -10,7 +10,14 @@ angular.module('gaussHyrax.action', [])
   $scope.singleNote = "";  // Keep the note field blank by default
   $scope.selectedAction = null;
 
-  $scope.emailText = "";
+  $scope.email = {
+    username: "",
+    familyMember: "",
+    text: "",
+  };
+
+  //get current username
+  //get selected familyMember
   
   // Using moment to convert date into a simpler format
   $scope.dateEntered = moment(new Date()).format('MMM DD YYYY');
@@ -37,6 +44,20 @@ angular.module('gaussHyrax.action', [])
   $scope.setSelected = function (actionClicked) {
     $scope.selectedAction = actionClicked;
   };
+
+  //Invoked when the actionView send button is clicked
+  $scope.sendEmail = function(emailObj){
+    $http({
+      method : 'POST',
+      url : '/api/grid',
+      data : emailObj,
+      headers: {'Content-Type': 'application/json'}
+    })
+    .then(function(res) {
+      console.log('\n\n\nGET REQUEST SENT!', res, '\n\n\n');
+    })
+  };
+
 
   // Invoked when the actionView submit button is clicked 
   $scope.saveAction = function(someAction, pointValue, dateOccured, someNote){
