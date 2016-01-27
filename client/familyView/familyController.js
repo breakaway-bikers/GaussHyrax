@@ -165,6 +165,7 @@ angular.module('gaussHyrax.family', ['FamilyServices'])
       var date = new Date(member.nextContactDate);
       return date;
     };
+
     //----------this is Juan's Addition-------------
     //this visually clears the not notes in the app. I need to now send this info to the database and make sure all teh listeners are capturing it.
     $scope.clearHistory = function(familyMemberObj) {
