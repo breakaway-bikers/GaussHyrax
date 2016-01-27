@@ -46,14 +46,14 @@ angular.module('gaussHyrax.action', [])
   };
 
   //Invoked when the actionView send button is clicked
-  $scope.sendEmail = function(recipient, message){
+  $scope.sendEmail = function(emailAddress, message){
     
-    console.log('Recipient:', recipient, 'Message:', message);
+    console.log('emailAddress:', emailAddress, 'Message:', message);
 
     var emailObj = {
       theSender: "Prsnl",
-      theEmail: "jwtippens@gmail.com",
-      theMessage: "hellohello!!",
+      theEmail: emailAddress,
+      theMessage: message,
     };
 
     $http({
