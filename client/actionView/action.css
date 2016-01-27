@@ -72,13 +72,6 @@ textarea {
 
 .inlinebaby2 {
   display: inline;
-  margin: 15px 45px;
+  float: center;
+  margin-left: 10px;
 }
-
-.narrow {
-  max-width: 250px;
-  float: right;
-}
-
-
-
