@@ -66,5 +66,12 @@ textarea {
   color:green;
 }
 
+.inlinebaby {
+  display: inline;
+}
 
-
+.inlinebaby2 {
+  display: inline;
+  float: center;
+  margin-left: 10px;
+}

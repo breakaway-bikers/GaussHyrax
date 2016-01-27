@@ -43,6 +43,7 @@ db.once('open', function() {
     nextContactDate: Date,      //determines order in the list
     contactFrequency: Number,   //number of days till next task
     history:[RelationshipHistorySchema],
+    image: String,
   });
 
   var UserSchema = mongoose.Schema({

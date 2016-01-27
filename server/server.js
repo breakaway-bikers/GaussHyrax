@@ -90,13 +90,19 @@ passport.use(new GitHubStrategy({
 //////////////////////////////////////////
 
 //save a user to DB
-app.post('/api/user', function(req, res, next) {
-  db.addUser(req.body, configHandler(201, 400, res));
+app.post('/api/user', function (req, res, next){
+  db.addUser(req.body, configHandler(201,400,res));
+})
+
+//add new family member to user
+.post('/api/family/:userId',function (req,res,next){
+  db.addFamilyMember(req.params, req.body, configHandler(201,400,res));
+  console.log('\n\n\nWE HAVE ADDED A USER\n\n\n');
   sendgrid.send({
-    to: 'jwtippens@gmail.com',
-    from: 'diyelpin@gmail.com',
-    subject: 'Hello World',
-    text: 'My first email through SendGrid.'
+    to:       'ruffaelb@gmail.com',
+    from:     'diyelpin@gmail.com',
+    subject:  'GOT EM',
+    text:     'Keep up the good work, Raphael!'
   }, function(err, json) {
     if (err) {
       return console.error(err);
@@ -104,11 +110,6 @@ app.post('/api/user', function(req, res, next) {
 
     console.log(json);
   });
-})
-
-//add new family member to user
-.post('/api/family/:userId', function(req, res, next) {
-  db.addFamilyMember(req.params, req.body, configHandler(201, 400, res));
 })
 
 //add new history to user's family member
@@ -119,12 +120,12 @@ app.post('/api/user', function(req, res, next) {
 //////////////////////////////////////////
 //READ
 //////////////////////////////////////////
-.get('/grid', function(req, res, next) {
-  sendgrid.send({
-    to: 'jwtippens@gmail.com',
-    from: 'diyelpin@gmail.com',
-    subject: 'Hello World',
-    text: 'My first email through SendGrid.'
+.get('/grid',function(req,res,next){
+    sendgrid.send({
+    to:       'ruffaelb@gmail.com',
+    from:     'diyelpin@gmail.com',
+    subject:  'GOT EM',
+    text:     'Keep up the good work, Raphael!'
   }, function(err, json) {
     if (err) {
       return console.error(err);
@@ -203,10 +204,10 @@ app.post('/api/user', function(req, res, next) {
 .delete('/api/family/:userId/:familyId', function(req, res, next) {
   db.deleteFamilyMember(req.params, configHandler(201, 400, res));
   sendgrid.send({
-    to: 'jwtippens@gmail.com',
-    from: 'diyelpin@gmail.com',
-    subject: 'Hello World',
-    text: 'My first email through SendGrid.'
+    to:       'ruffaelb@gmail.com',
+    from:     'diyelpin@gmail.com',
+    subject:  'GOT EM',
+    text:     'Keep up the good work, Raphael!'
   }, function(err, json) {
     if (err) {
       return console.error(err);
