@@ -4,6 +4,18 @@ var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var GitHubStrategy = require('passport-github').Strategy;
+var env = require('node-env-file');
+
+// if( (__dirname + '/.env') ){
+//   env(__dirname + '/.env')
+// }
+
+env(__dirname + '/.env')
+
+var sendgrid  = require('sendgrid')(process.env.SENDGRIDAPIKEY);
+
+console.log('\n\n\nHERE IS THE SEND GRID API KEY', process.env.SENDGRIDAPIKEY, '\n\n\n');
+
 var port = process.env.PORT || 3000;
 
 var app = express();
@@ -78,6 +90,15 @@ passport.use(new GitHubStrategy({
 //save a user to DB
 app.post('/api/user', function (req, res, next){
   db.addUser(req.body, configHandler(201,400,res));
+  sendgrid.send({
+    to:       'jwtippens@gmail.com',
+    from:     'diyelpin@gmail.com',
+    subject:  'Hello World',
+    text:     'My first email through SendGrid.'
+  }, function(err, json) {
+    if (err) { return console.error(err); }
+    console.log(json);
+  });
 })
 
 //add new family member to user
@@ -94,6 +115,17 @@ app.post('/api/user', function (req, res, next){
 //////////////////////////////////////////
 //READ
 //////////////////////////////////////////
+.get('/grid',function(req,res,next){
+    sendgrid.send({
+    to:       'jwtippens@gmail.com',
+    from:     'diyelpin@gmail.com',
+    subject:  'Hello World',
+    text:     'My first email through SendGrid.'
+  }, function(err, json) {
+    if (err) { return console.error(err); }
+    console.log(json);
+  });
+})
 
 //passport
 .get('/auth/github',
@@ -118,12 +150,12 @@ app.post('/api/user', function (req, res, next){
 })
 
 // find a user
-.get('/api/user/:userName/:password', function (req, res, next){
+.get('/api/user/:userName/:password', function (req, res, next) {
   db.verifyUser(req.params, configHandler(200,404,res));
 })
 
 //get all family info for a user
-.get('/api/family/:userId',function(req,res,next){
+.get('/api/family/:userId', function(req, res, next) {
   db.getAllFamily(req.params, configHandler(200,400,res));
 })
 
@@ -161,6 +193,15 @@ app.post('/api/user', function (req, res, next){
 //delete family member
 .delete('/api/family/:userId/:familyId',function (req,res,next){
   db.deleteFamilyMember(req.params, configHandler(201,400,res));
+  sendgrid.send({
+    to:       'jwtippens@gmail.com',
+    from:     'diyelpin@gmail.com',
+    subject:  'Hello World',
+    text:     'My first email through SendGrid.'
+  }, function(err, json) {
+    if (err) { return console.error(err); }
+    console.log(json);
+  });
 })
 
 //delete history

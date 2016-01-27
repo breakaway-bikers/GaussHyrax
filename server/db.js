@@ -27,7 +27,7 @@ db.once('open', function() {
     date: Date,
     action: String,  //what was the task
     points: Number,
-    notes: String
+    notes: String,
   });
 
   var FamilySchema = mongoose.Schema({
@@ -42,19 +42,19 @@ db.once('open', function() {
     zipcode: String,
     nextContactDate: Date,      //determines order in the list
     contactFrequency: Number,   //number of days till next task
-    history:[RelationshipHistorySchema]
+    history:[RelationshipHistorySchema],
   });
 
   var UserSchema = mongoose.Schema({
-    userName: {type:String,index:{unique:true}},
+    userName: { type: String, index: { unique: true } },
     password: String,
-    family:[FamilySchema]
+    family:[FamilySchema],
   });
   //store the possible actions
   //will be its own independent doc/collection
   var ActionSchema = mongoose.Schema({
     points: Number,
-    action: String
+    action: String,
   });
 
 // instantiate the models
@@ -62,80 +62,43 @@ db.once('open', function() {
   var User = mongoose.model('User',UserSchema);
   var Action = mongoose.model('Action',ActionSchema);
   exports.User = User;
-// /////////////////////////////
-// /////////Passport////////////
-// /////////////////////////////
-// var GITHUB_CLIENT_ID = '48ab89f9ab66149557b4';
-// var GITHUB_CLIENT_SECRET = '67dbbc5cd1491dea680c4af0ac874c1abeb8989c';
-//
-// passport.serializeUser(function(user, done) {
-//   done(null, user.id);
-// });
-//
-// passport.deserializeUser(function(id, done) {
-//   console.log('deserialize')
-//   User.findById(id, function(err, user) {
-//     console.log('deserializing err', err);
-//     done(err, user);
-//   });
-// });
-//
-// passport.use(new GitHubStrategy({
-//   clientID: GITHUB_CLIENT_ID,
-//   clientSecret: GITHUB_CLIENT_SECRET,
-//   callbackURL: "http://localhost:3000/auth/github/callback"
-// },
-//   function(accessToken, refreshToken, profile, done) {
-//     User.findOne({ userName: profile.username }, function (err, user) {
-//       if (user) {
-//         console.log('this is the user', user);
-//         return done(null, user);
-//       } else {
-//         var user = new User();
-//         user.userName = profile.username;
-//         user.save(function(err, user) {
-//           if(err){
-//             console.log('error in saving');
-//             return done(null, false);
-//           } else {
-//            console.log(user + ' was saved');
-//            return done(null, user);
-//           }
-//         });
-//       }
-//     });
-//   }
-// ));
 
   //task table
   db.collections['actions'].remove();
   var actions = [
     {
-      action:"make call",
-      points:8
-    },{
-      action:"send text",
-      points:3
-    },{
-      action:"send letter",
-      points:6
-    },{
-      action:"send email",
-      points:4
-    },{
-      action:"have coffee",
-      points:10
-    },{
-      action:"have dinner",
-      points:10
-    },{
-      action:"have lunch",
-      points:10
-    },{
-      action:"have drinks",
-      points:10
-    }
-  ]
+      action:'make call',
+      points:8,
+    },
+    {
+      action:'send text',
+      points:3,
+    },
+    {
+      action:'send letter',
+      points:6,
+    },
+    {
+      action:'send email',
+      points:4,
+    },
+    {
+      action:'have coffee',
+      points:10,
+    },
+    {
+      action:'have dinner',
+      points:10,
+    },
+    {
+      action:'have lunch',
+      points:10,
+    },
+    {
+      action:'have drinks',
+      points:10,
+    },
+  ];
   Action.create(actions);
 
   //insert default data for testing purposes
@@ -147,52 +110,53 @@ db.once('open', function() {
     userName: 'Gandalf',
     password: 'DeezNuts',
     family:[{
-      firstName:"frodo",
-      lastName:"baggins",
+      firstName:'frodo',
+      lastName:'baggins',
       nextContactDate: new Date(),
       contactFrequency: 14,
       history:[
         {
-          action:"call",
-          notes:"this guy is a nn",
+          action:'call',
+          notes:'this guy is a nn',
           points:10,
-          date: new Date("1/1/16")
+          date: new Date('1/1/16'),
         },
         {
-          action:"email",
-          notes:"no, wait, I am a nn",
-          points:5,
-          date: new Date("1/10/16")
+          action:'email',
+          notes:'no, wait, I am a nn',
+          points: 5,
+          date: new Date('1/10/16'),
         },
         {
-          action:"email",
-          notes:"love emailing this guy",
+          action:'email',
+          notes:'love emailing this guy',
           points:5,
-          date: new Date()
-        }
-      ]
+          date: new Date(),
+        },
+      ],
 
-    },{
-      firstName:"bilbo",
-      lastName:"baggins",
+    },
+    {
+      firstName:'bilbo',
+      lastName:'baggins',
       nextContactDate: new Date(),
       contactFrequency: 7,
       history:[
         {
-          action:"text",
-          notes:"I love ice cream",
+          action:'text',
+          notes:'I love ice cream',
           points:2,
-          date: new Date("12/1/15")
+          date: new Date("12/1/15"),
         },
         {
-          action:"call",
-          notes:"he does a great impression of Pee Wee Herman",
+          action:'call',
+          notes:'he does a great impression of Pee Wee Herman',
           points:5,
-          date: new Date()
-        }
-      ]
-    }
-    ]
+          date: new Date(),
+        },
+      ],
+    },
+  ],
   };
 
   User.create([user1]);
