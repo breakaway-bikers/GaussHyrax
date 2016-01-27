@@ -47,10 +47,10 @@ app.post('/api/user', function (req, res, next){
   db.addFamilyMember(req.params, req.body, configHandler(201,400,res));
   console.log('\n\n\nWE HAVE ADDED A USER\n\n\n');
   sendgrid.send({
-    to:       'jwtippens@gmail.com',
+    to:       'ruffaelb@gmail.com',
     from:     'diyelpin@gmail.com',
-    subject:  'Hello World',
-    text:     'My first email through SendGrid.'
+    subject:  'GOT EM',
+    text:     'Keep up the good work, Raphael!'
   }, function(err, json) {
     if (err) { return console.error(err); }
     console.log(json);
@@ -68,10 +68,10 @@ app.post('/api/user', function (req, res, next){
 //////////////////////////////////////////
 .get('/grid',function(req,res,next){
     sendgrid.send({
-    to:       'jwtippens@gmail.com',
+    to:       'ruffaelb@gmail.com',
     from:     'diyelpin@gmail.com',
-    subject:  'Hello World',
-    text:     'My first email through SendGrid.'
+    subject:  'GOT EM',
+    text:     'Keep up the good work, Raphael!'
   }, function(err, json) {
     if (err) { return console.error(err); }
     console.log(json);
@@ -123,10 +123,10 @@ app.post('/api/user', function (req, res, next){
 .delete('/api/family/:userId/:familyId',function (req,res,next){
   db.deleteFamilyMember(req.params, configHandler(201,400,res));
   sendgrid.send({
-    to:       'jwtippens@gmail.com',
+    to:       'ruffaelb@gmail.com',
     from:     'diyelpin@gmail.com',
-    subject:  'Hello World',
-    text:     'My first email through SendGrid.'
+    subject:  'GOT EM',
+    text:     'Keep up the good work, Raphael!'
   }, function(err, json) {
     if (err) { return console.error(err); }
     console.log(json);
