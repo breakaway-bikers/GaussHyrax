@@ -25,6 +25,10 @@
   },
   "homepage": "https://github.com/Courageous-Climbers/GaussHyrax#readme",
   "dependencies": {
+    "angular": "~1.4.8",
+    "angular-animate": "~1.4.8",
+    "angular-ui-router": "~0.2.15",
+    "angularjs-slider": "~2.4.1",
     "body-parser": "^1.14.2",
     "bower": "^1.7.2",
     "dotenv": "^2.0.0",
@@ -33,8 +37,12 @@
     "moment": "^2.11.1",
     "mongodb": "^2.1.4",
     "mongoose": "^4.3.5",
+    "mongoose-findorcreate": "^0.1.2",
     "morgan": "^1.6.1",
     "node-env-file": "^0.1.8",
+    "npm-report": "^0.4.1",
+    "passport": "~0.3.2",
+    "passport-github": "^1.0.0",
     "sendgrid": "^2.0.0",
     "underscore": "^1.8.3"
   }

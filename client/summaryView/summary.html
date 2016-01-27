@@ -8,7 +8,7 @@
         <div ng-show="activeFamilyMember._id" class="contactFreq">{{activeFamilyMember.contactFrequency}} days</div>
     </div>
     <div class="contactInfo">
-    <img src="assets/batman.jpg" class="familyImg" ng-show="activeFamilyMember._id">
+      <img ng-src={{activeFamilyMember.image}} class="familyImg" ng-show="activeFamilyMember._id">
       <ul>
         <li class="email">{{activeFamilyMember.streetAddress}}</li>
         <li ng-show="activeFamilyMember.city" class="email">{{activeFamilyMember.city}} {{activeFamilyMember.state}}, {{activeFamilyMember.zipcode}}</li>
@@ -19,13 +19,22 @@
     <div id="donut"></div>
 
     <div class="actionWrapper">
-      <h2>Notes</h2>
+      <!-- on the backburner, a little more complicated than anticipated -->
+      <!-- <form name="myForm">
+      <label for="singleSelect"> Single timeframe: </label><br>
+        <select name="singleSelect" ng-model="activeFamilyMember">
+          <option value="lastWeek">Last Week</option>
+          <option value="lastMonth">Last Month</option>
+          <option value="lastYear">Last Year</option>
+        </select><br> -->
+
+      <h2>Notes</h2><span><button ng-click="clearHistory(activeFamilyMember)">clear</button></span>
       <div class="scrollBox">
         <ul class="actionList">
           <li class="actionItem" ng-repeat="action in activeFamilyMember.history | orderBy:'-date'">
               <div class="leftContent">
                 <ul>
-                  <li>{{action.date | niceDate}}</li>
+                  <li>{{action.date | niceDate}}<a ng-click="clearSingleEvent(action, activeFamilyMember)">  clear</a></li>
                 </ul>
               </div>
               <div class="rightContent">
@@ -39,6 +48,7 @@
           </li>
         </ul>
       </div>
+
     </div>
   </div>
 </div>
