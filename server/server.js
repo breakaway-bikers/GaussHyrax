@@ -10,7 +10,11 @@ var env = require('node-env-file');
 //   env(__dirname + '/.env')
 // }
 
+<<<<<<< HEAD
 env(__dirname + '/.env');
+=======
+env(__dirname + '/.env')
+>>>>>>> 6c69f0dbde0574980ec138d23dbd1d8de637e8ed
 
 var sendgrid  = require('sendgrid')(process.env.SENDGRIDAPIKEY);
 var GITHUB_CLIENT_ID = process.env.GITHUBCLIENTID;
@@ -98,10 +102,15 @@ app.post('/api/user', function(req, res, next) {
   db.addFamilyMember(req.params, req.body, configHandler(201, 400, res));
   console.log('\n\n\nWE HAVE ADDED A USER\n\n\n');
   sendgrid.send({
-    to:       'jwtippens@gmail.com',
+    to:       'ruffaelb@gmail.com',
     from:     'diyelpin@gmail.com',
+<<<<<<< HEAD
     subject:  'Hello World',
     text:     'My first email through SendGrid.',
+=======
+    subject:  'GOT EM',
+    text:     'Keep up the good work, Raphael!'
+>>>>>>> 6c69f0dbde0574980ec138d23dbd1d8de637e8ed
   }, function(err, json) {
     if (err) { return console.error(err); }
 
@@ -117,12 +126,21 @@ app.post('/api/user', function(req, res, next) {
 //////////////////////////////////////////
 //READ
 //////////////////////////////////////////
+<<<<<<< HEAD
 .get('/grid', function(req, res, next) {
   sendgrid.send({
     to:       'jwtippens@gmail.com',
     from:     'diyelpin@gmail.com',
     subject:  'Hello World',
     text:     'My first email through SendGrid.',
+=======
+.get('/grid',function(req,res,next){
+    sendgrid.send({
+    to:       'ruffaelb@gmail.com',
+    from:     'diyelpin@gmail.com',
+    subject:  'GOT EM',
+    text:     'Keep up the good work, Raphael!'
+>>>>>>> 6c69f0dbde0574980ec138d23dbd1d8de637e8ed
   }, function(err, json) {
     if (err) { return console.error(err); }
 
@@ -196,10 +214,15 @@ app.post('/api/user', function(req, res, next) {
 .delete('/api/family/:userId/:familyId', function(req, res, next) {
   db.deleteFamilyMember(req.params, configHandler(201, 400, res));
   sendgrid.send({
-    to:       'jwtippens@gmail.com',
+    to:       'ruffaelb@gmail.com',
     from:     'diyelpin@gmail.com',
+<<<<<<< HEAD
     subject:  'Hello World',
     text:     'My first email through SendGrid.',
+=======
+    subject:  'GOT EM',
+    text:     'Keep up the good work, Raphael!'
+>>>>>>> 6c69f0dbde0574980ec138d23dbd1d8de637e8ed
   }, function(err, json) {
     if (err) { return console.error(err); }
 
