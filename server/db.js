@@ -1,12 +1,14 @@
 var mongoose = require('mongoose');
 var moment = require('moment');
 var _ = require('underscore');
+var passport = require('passport');
+var GitHubStrategy = require('passport-github').Strategy;
 
-// // mongoose.connect('mongodb://localhost/hyrax');
+mongoose.connect('mongodb://localhost/hyrax');
 // mongoose.connect('mongodb://ksiddana:itsmeagain@ds049925.mongolab.com:49925/hyrax');
 // var mongoURI = 'mongodb://diyelpin:Beansandburrito1600@ds047335.mongolab.com:47335/heroku_ws06b5hx';
-var mongoURI = 'mongodb://diyelpin:Beansandburrito1600@ds051595.mongolab.com:51595/heroku_14zh7mth';
-mongoose.connect(process.env.MONGOLAB_URI || mongoURI);
+// var mongoURI = 'mongodb://diyelpin:Beansandburrito1600@ds051595.mongolab.com:51595/heroku_14zh7mth';
+// mongoose.connect(process.env.MONGOLAB_URI || mongoURI);
 var db = mongoose.connection;
 
 var exports = module.exports;
@@ -48,7 +50,6 @@ db.once('open', function() {
     password: String,
     family:[FamilySchema]
   });
-
   //store the possible actions
   //will be its own independent doc/collection
   var ActionSchema = mongoose.Schema({
@@ -60,6 +61,51 @@ db.once('open', function() {
 
   var User = mongoose.model('User',UserSchema);
   var Action = mongoose.model('Action',ActionSchema);
+  exports.User = User;
+// /////////////////////////////
+// /////////Passport////////////
+// /////////////////////////////
+// var GITHUB_CLIENT_ID = '48ab89f9ab66149557b4';
+// var GITHUB_CLIENT_SECRET = '67dbbc5cd1491dea680c4af0ac874c1abeb8989c';
+//
+// passport.serializeUser(function(user, done) {
+//   done(null, user.id);
+// });
+//
+// passport.deserializeUser(function(id, done) {
+//   console.log('deserialize')
+//   User.findById(id, function(err, user) {
+//     console.log('deserializing err', err);
+//     done(err, user);
+//   });
+// });
+//
+// passport.use(new GitHubStrategy({
+//   clientID: GITHUB_CLIENT_ID,
+//   clientSecret: GITHUB_CLIENT_SECRET,
+//   callbackURL: "http://localhost:3000/auth/github/callback"
+// },
+//   function(accessToken, refreshToken, profile, done) {
+//     User.findOne({ userName: profile.username }, function (err, user) {
+//       if (user) {
+//         console.log('this is the user', user);
+//         return done(null, user);
+//       } else {
+//         var user = new User();
+//         user.userName = profile.username;
+//         user.save(function(err, user) {
+//           if(err){
+//             console.log('error in saving');
+//             return done(null, false);
+//           } else {
+//            console.log(user + ' was saved');
+//            return done(null, user);
+//           }
+//         });
+//       }
+//     });
+//   }
+// ));
 
   //task table
   db.collections['actions'].remove();
