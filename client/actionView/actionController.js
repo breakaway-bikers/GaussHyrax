@@ -9,6 +9,8 @@ angular.module('gaussHyrax.action', [])
   $scope.points = 0;
   $scope.singleNote = "";  // Keep the note field blank by default
   $scope.selectedAction = null;
+
+  $scope.emailText = "";
   
   // Using moment to convert date into a simpler format
   $scope.dateEntered = moment(new Date()).format('MMM DD YYYY');
