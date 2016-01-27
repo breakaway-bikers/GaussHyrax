@@ -1,17 +1,17 @@
 <div class="login-background">
   <div class="loginWrapper">
-    
+
     <h1>Prsnl</h1>
     <h2>manage the people in your life </h2>
-    
+
     <form>
       <input type="text" class="user box" ng-model="user.userName" placeholder="username" required>
       <input type="password" class="password box" ng-model="user.password" placeholder="password" required>
       <input type="button" class="sign-up btn" ng-click="saveUser()" value="Sign Up (it's that easy)"/>
       <input type="submit" class="sign-in btn" ng-click="verifyUser()" value="Already a member? Sign In"/>
     </form>
-    
-    <div class="loginError" ng-show="showLoginError">{{errorMessage}}</div>
 
+    <div class="loginError" ng-show="showLoginError">{{errorMessage}}</div>
+    <a href="http://localhost:3000/auth/github/callback">Github</a>
   </div>
 </div>

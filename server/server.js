@@ -2,6 +2,8 @@ var express = require('express');
 var db = require('./db.js');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
+var passport = require('passport');
+var GitHubStrategy = require('passport-github').Strategy;
 var env = require('node-env-file');
 
 // if( (__dirname + '/.env') ){
@@ -21,7 +23,7 @@ var app = express();
 app.use(morgan('combined'))
 app.use(express.static(__dirname + '/../client'));  //serve files in client
 app.use(bodyParser.json())  // parse application/json
-
+app.use(passport.initialize());
 //function to configure the standard response handler
 var configHandler = function(successCode,failCode,res){
   return function(err,data){
@@ -32,6 +34,54 @@ var configHandler = function(successCode,failCode,res){
     }
   }
 }
+
+/////////////////////////////
+/////////Passport////////////
+/////////////////////////////
+var noobyGlobalVariable;
+var GITHUB_CLIENT_ID = '48ab89f9ab66149557b4';
+var GITHUB_CLIENT_SECRET = '67dbbc5cd1491dea680c4af0ac874c1abeb8989c';
+
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  console.log('deserialize')
+  User.findById(id, function(err, user) {
+    console.log('deserializing err', err);
+    done(err, user);
+  });
+});
+
+passport.use(new GitHubStrategy({
+  clientID: GITHUB_CLIENT_ID,
+  clientSecret: GITHUB_CLIENT_SECRET,
+  callbackURL: "http://localhost:3000/auth/github/callback"
+},
+  function(accessToken, refreshToken, profile, done) {
+    db.User.findOne({ userName: profile.username }, function (err, user) {
+      if (user) {
+        console.log('this is the user', user);
+        noobyGlobalVariable = user;
+        return done(null, user);
+      } else {
+        var user = new db.User();
+        user.userName = profile.username;
+        user.save(function(err, user) {
+          if(err){
+            console.log('error in saving');
+            return done(null, false);
+          } else {
+            noobyGlobalVariable = user;
+           console.log(user + ' was saved');
+           return done(null, user);
+          }
+        });
+      }
+    });
+  }
+));
 
 //////////////////////////////////////////
 //CREATE
@@ -75,6 +125,28 @@ app.post('/api/user', function (req, res, next){
     if (err) { return console.error(err); }
     console.log(json);
   });
+})
+
+//passport
+.get('/auth/github',
+  passport.authenticate('github'))
+
+.get('/auth/github/callback',
+  passport.authenticate('github', { failureRedirect: '/login', scope: [ 'user:email' ]}),
+  function(req, res) {
+    console.log('before redirecting');
+    // Successful authentication, redirect home.
+    console.log('data after authentication', noobyGlobalVariable);
+    // res.send(noobyGlobalVariable);
+    res.redirect('/#/dashboard');
+})
+.get('/githubinfo', function(req,res){
+  console.log('githubinfo', noobyGlobalVariable);
+  if(noobyGlobalVariable){
+    res.status(200).send(noobyGlobalVariable);
+  } else {
+    res.status(404).send();
+  }
 })
 
 // find a user
