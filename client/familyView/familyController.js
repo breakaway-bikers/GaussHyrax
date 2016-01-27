@@ -186,12 +186,14 @@ angular.module('gaussHyrax.family', ['FamilyServices'])
 
       for (var i = 0; i < familyMemberObj.length; i++) {
         if (action === familyMemberObj[i]._id) {
-          console.log('found it!', familyMemberObj[i]);
+          //console.log('found it!', familyMemberObj[i]);
           removed = familyMemberObj.splice(i, 1);
+          console.log("this is the removed variable", removed);
+          return familyMemberObj;
         };
       };
-      $scope.$broadcast('familyChange', removed);
-      FamilyFactory.updateMember(removed);
+      $scope.$broadcast('familyChange', familyMemberObj);
+      FamilyFactory.updateMember(familyMemberObj);
 
     };
   }])
