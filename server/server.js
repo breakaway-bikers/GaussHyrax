@@ -13,7 +13,8 @@ var env = require('node-env-file');
 // env(__dirname + '/.env')
 
 var sendgrid  = require('sendgrid')(process.env.SENDGRIDAPIKEY);
-
+var GITHUB_CLIENT_ID = process.env.GITHUBCLIENTID;
+var GITHUB_CLIENT_SECRET = process.env.GITHUBCLIENTSECRET;
 console.log('\n\n\nHERE IS THE SEND GRID API KEY', process.env.SENDGRIDAPIKEY, '\n\n\n');
 
 var port = process.env.PORT || 3000;
@@ -39,8 +40,7 @@ var configHandler = function(successCode,failCode,res){
 /////////Passport////////////
 /////////////////////////////
 var noobyGlobalVariable;
-var GITHUB_CLIENT_ID = '48ab89f9ab66149557b4';
-var GITHUB_CLIENT_SECRET = '67dbbc5cd1491dea680c4af0ac874c1abeb8989c';
+
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
@@ -57,7 +57,7 @@ passport.deserializeUser(function(id, done) {
 passport.use(new GitHubStrategy({
   clientID: GITHUB_CLIENT_ID,
   clientSecret: GITHUB_CLIENT_SECRET,
-  callbackURL: "http://localhost:3000/auth/github/callback"
+  callbackURL: "https://prsnl-2.herokuapp.com/auth/github/callback"
 },
   function(accessToken, refreshToken, profile, done) {
     db.User.findOne({ userName: profile.username }, function (err, user) {
