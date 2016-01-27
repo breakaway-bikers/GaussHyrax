@@ -6,11 +6,9 @@ var passport = require('passport');
 var GitHubStrategy = require('passport-github').Strategy;
 var env = require('node-env-file');
 
-// if( (__dirname + '/.env') ){
-//   env(__dirname + '/.env')
-// }
 
-env(__dirname + '/.env')
+
+// env(__dirname + '/.env')
 
 var sendgrid  = require('sendgrid')(process.env.SENDGRIDAPIKEY);
 var GITHUB_CLIENT_ID = process.env.GITHUBCLIENTID;
