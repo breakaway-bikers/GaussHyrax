@@ -20,11 +20,8 @@ angular.module('newFamilyMemberServices', ['angular-md5'])
 
     //Raph NOTE: I added this check for an image, if none is present, default to batman.
     if (!memberObj.image) {
-      console.log(getEmailHash(memberObj.email));
-      console.log('SAVE: setting default image');
-      memberObj.image = 'http://media.dcentertainment.com/sites/default/files/styles/character_thumb_160x160/public/CharThumb_215x215_batman_52ab7a8c79da39.68474144.jpg?itok=iHwyI5Vh';
-    }
-
+      memberObj.image = 'http://www.gravatar.com/avatar/' + getEmailHash(memberObj.email) + '?d=http://media.dcentertainment.com/sites/default/files/styles/character_thumb_160x160/public/CharThumb_215x215_batman_52ab7a8c79da39.68474144.jpg?itok=iHwyI5Vh'
+    };
     //Raph NOTE end
 
     console.log('this is memberObj: ', memberObj);
