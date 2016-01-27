@@ -6,16 +6,14 @@ var passport = require('passport');
 var GitHubStrategy = require('passport-github').Strategy;
 var env = require('node-env-file');
 
-// if( (__dirname + '/.env') ){
-//   env(__dirname + '/.env')
-// }
 
-env(__dirname + '/.env')
+
+//env(__dirname + '/.env')
 
 var sendgrid = require('sendgrid')(process.env.SENDGRIDAPIKEY);
 var GITHUB_CLIENT_ID = process.env.GITHUBCLIENTID;
 var GITHUB_CLIENT_SECRET = process.env.GITHUBCLIENTSECRET;
-console.log('\n\n\nHERE IS THE SEND GRID API KEY', process.env.SENDGRIDAPIKEY, '\n\n\n');
+console.log('\n\n\nHERE IS THE GITHUB CLIENT ID', process.env.GITHUBCLIENTID, '\n\n\n');
 
 var port = process.env.PORT || 3000;
 
@@ -97,16 +95,6 @@ app.post('/api/user', function(req, res, next) {
 .post('/api/family/:userId', function(req, res, next) {
   db.addFamilyMember(req.params, req.body, configHandler(201, 400, res));
   console.log('\n\n\nWE HAVE ADDED A USER\n\n\n');
-  sendgrid.send({
-    to:       'ruffaelb@gmail.com',
-    from:     'diyelpin@gmail.com',
-    subject:  'GOT EM',
-    text:     'Keep up the good work, Raphael!'
-  }, function(err, json) {
-    if (err) { return console.error(err); }
-
-    console.log(json);
-  });
 })
 
 //add new history to user's family member
@@ -117,14 +105,17 @@ app.post('/api/user', function(req, res, next) {
 //////////////////////////////////////////
 //READ
 //////////////////////////////////////////
-.get('/api/grid',function(req,res,next){
-    console.log('\n\n\nREQUEST:', req.body, '\n\n\n');
+.post('/api/grid',function(req,res,next){
+    console.log('\n\n\nREQUEST RECIEVED:', req.body, '\n\n\n');
+
+    var email = req.body.theEmail;
+    var message = req.body.theMessage;
 
     sendgrid.send({
-    to:       'ruffaelb@gmail.com',
+    to:       email,
     from:     'diyelpin@gmail.com',
-    subject:  'GOT EM',
-    text:     'Keep up the good work, Raphael!'
+    subject:  'Message from prsnl-2.herokuapp.com',
+    text:     message,
   }, function(err, json) {
     if (err) { return console.error(err); }
 
@@ -197,16 +188,7 @@ app.post('/api/user', function(req, res, next) {
 //delete family member
 .delete('/api/family/:userId/:familyId', function(req, res, next) {
   db.deleteFamilyMember(req.params, configHandler(201, 400, res));
-  sendgrid.send({
-    to:       'ruffaelb@gmail.com',
-    from:     'diyelpin@gmail.com',
-    subject:  'GOT EM',
-    text:     'Keep up the good work, Raphael!'
-  }, function(err, json) {
-    if (err) { return console.error(err); }
-
-    console.log(json);
-  });
+  
 })
 
 //delete history

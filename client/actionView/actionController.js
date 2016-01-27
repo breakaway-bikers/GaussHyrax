@@ -46,7 +46,16 @@ angular.module('gaussHyrax.action', [])
   };
 
   //Invoked when the actionView send button is clicked
-  $scope.sendEmail = function(emailObj){
+  $scope.sendEmail = function(emailAddress, message){
+    
+    console.log('emailAddress:', emailAddress, 'Message:', message);
+
+    var emailObj = {
+      theSender: "Prsnl",
+      theEmail: emailAddress,
+      theMessage: message,
+    };
+
     $http({
       method : 'POST',
       url : '/api/grid',
