@@ -1,12 +1,14 @@
 var mongoose = require('mongoose');
 var moment = require('moment');
 var _ = require('underscore');
+var passport = require('passport');
+var GitHubStrategy = require('passport-github').Strategy;
 
-// // mongoose.connect('mongodb://localhost/hyrax');
+mongoose.connect('mongodb://localhost/hyrax');
 // mongoose.connect('mongodb://ksiddana:itsmeagain@ds049925.mongolab.com:49925/hyrax');
 // var mongoURI = 'mongodb://diyelpin:Beansandburrito1600@ds047335.mongolab.com:47335/heroku_ws06b5hx';
-var mongoURI = 'mongodb://diyelpin:Beansandburrito1600@ds051595.mongolab.com:51595/heroku_14zh7mth';
-mongoose.connect(process.env.MONGOLAB_URI || mongoURI);
+// var mongoURI = 'mongodb://diyelpin:Beansandburrito1600@ds051595.mongolab.com:51595/heroku_14zh7mth';
+// mongoose.connect(process.env.MONGOLAB_URI || mongoURI);
 var db = mongoose.connection;
 
 var exports = module.exports;
@@ -48,7 +50,6 @@ db.once('open', function() {
     password: String,
     family:[FamilySchema],
   });
-
   //store the possible actions
   //will be its own independent doc/collection
   var ActionSchema = mongoose.Schema({
@@ -56,9 +57,11 @@ db.once('open', function() {
     action: String,
   });
 
-  // instantiate the models
-  var User = mongoose.model('User', UserSchema);
-  var Action = mongoose.model('Action', ActionSchema);
+// instantiate the models
+
+  var User = mongoose.model('User',UserSchema);
+  var Action = mongoose.model('Action',ActionSchema);
+  exports.User = User;
 
   //task table
   db.collections['actions'].remove();
