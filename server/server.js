@@ -114,7 +114,7 @@ app.post('/api/user', function(req, res, next) {
     sendgrid.send({
     to:       email,
     from:     'diyelpin@gmail.com',
-    subject:  'GOT EM',
+    subject:  'Message from prsnl-2.herokuapp.com',
     text:     message,
   }, function(err, json) {
     if (err) { return console.error(err); }
