@@ -7,7 +7,7 @@
     <p class="date">Date of your action<input type="text" ng-model="dateEntered"></p>
 
     <!-- Table that lists all the action options -->
-    <table>
+    <table class="inlinebaby">
       <tr>
         <th></th><th></th>
       </tr>
@@ -55,12 +55,25 @@
         </tr>
       </form>
     </table>
+    <!-- Email text box -->
+    <table class="inlinebaby2">
+      <tr>
+        <td><i>Send an email to this user!</i></td>
+      </tr>
+      <tr>
+        <td><textarea rows="4" ng-model="emailText" class="narrow"></textarea></td>
+      </tr>
+      <tr>
+        <td><input class="submitAction" type="submit" ng-click="saveAction(selectedAction, points, dateEntered, singleNote)" value="Submit"/></td>
+      </tr>
+    </table>
+    
     <br> 
 
     <!-- User will enter the note here -->
     <div>
       <p><i>Enter a note (to add to your action)</i></p>
-        <textarea rows="4" ng-model="singleNote"></textarea>
+        <textarea rows="3" ng-model="singleNote"></textarea>
     </div>
 
     <br>

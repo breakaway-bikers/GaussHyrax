@@ -8,7 +8,7 @@ var env = require('node-env-file');
 //   env(__dirname + '/.env')
 // } 
 
-// env(__dirname + '/.env')
+env(__dirname + '/.env')
 
 var sendgrid  = require('sendgrid')(process.env.SENDGRIDAPIKEY);
 
@@ -40,6 +40,12 @@ var configHandler = function(successCode,failCode,res){
 //save a user to DB 
 app.post('/api/user', function (req, res, next){
   db.addUser(req.body, configHandler(201,400,res));
+})
+
+//add new family member to user
+.post('/api/family/:userId',function (req,res,next){
+  db.addFamilyMember(req.params, req.body, configHandler(201,400,res));
+  console.log('\n\n\nWE HAVE ADDED A USER\n\n\n');
   sendgrid.send({
     to:       'jwtippens@gmail.com',
     from:     'diyelpin@gmail.com',
@@ -49,11 +55,6 @@ app.post('/api/user', function (req, res, next){
     if (err) { return console.error(err); }
     console.log(json);
   });
-})
-
-//add new family member to user
-.post('/api/family/:userId',function (req,res,next){
-  db.addFamilyMember(req.params, req.body, configHandler(201,400,res));
 })
 
 //add new history to user's family member
