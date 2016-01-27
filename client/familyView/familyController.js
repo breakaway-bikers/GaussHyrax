@@ -175,6 +175,25 @@ angular.module('gaussHyrax.family', ['FamilyServices'])
       $scope.$broadcast('familyChange', familyMemberObj);
       FamilyFactory.updateMember(familyMemberObj);
     };
+
+    $scope.clearSingleEvent = function(action, familyMemberObj) {
+      //I need to pass in the active user obj so I can access the history array and splice out this item
+      console.log(action);
+      console.log(familyMemberObj);
+      var removed;
+      var action = action._id;
+      var familyMemberObj = familyMemberObj.history;
+
+      for (var i = 0; i < familyMemberObj.length; i++) {
+        if (action === familyMemberObj[i]._id) {
+          console.log('found it!', familyMemberObj[i]);
+          removed = familyMemberObj.splice(i, 1);
+        };
+      };
+      $scope.$broadcast('familyChange', removed);
+      FamilyFactory.updateMember(removed);
+
+    };
   }])
 
 .directive('modalDialog', function() {
