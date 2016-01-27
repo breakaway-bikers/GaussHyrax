@@ -65,7 +65,7 @@
             <td><textarea rows="4" ng-model="email.text" class="narrow"></textarea></td>
           </tr>
           <tr>
-            <td><input class="submitAction" type="submit" ng-model="email" ng-click="sendEmail(email)" value="Send"/></td>
+            <td><input class="submitAction" type="submit" ng-model="email" ng-click="sendEmail(member.firstName, email.text)" value="Send"/></td>
           </tr>
         </form>
       </table>
