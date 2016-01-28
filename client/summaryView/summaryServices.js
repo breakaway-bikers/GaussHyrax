@@ -326,31 +326,31 @@ angular.module('SummaryServicesModule', [])
   //I want to set up athe avialablity of reissuing teh graphs based on restricted dtae perameters
   //not sure if I will be making a three functions or three conditionals
 
-  factory.calculateGraphForOnewithTimeframe = function(familyMember, timeFrame) {
-    //just what is says ^^^
-    if (timeFrame === 'week') {
-      console.log('inside new function', familyMember);
-      //check if there is anything to plot
-      //I need to find this function and figure out what it does.
-      if (!this.pointGraph[familyMemberId]) {
-        return {
-          linePlot:[],
-          donutPlot: [],
-        };
-      }
-
-      //grab the points that are already computed from page load
-      var output = [this.pointGraph[familyMemberId].slice()];
-      output.unshift(this.xLabels);
-
-      return {
-        linePlot:output,
-        donutPlot: this.actionsDonut[familyMemberId], //also already computed from page load
-      };
-    } else if (false) {
-      //continue with the remaining conditionals
-    }
-  };
+  // factory.calculateGraphForOnewithTimeframe = function(familyMember, timeFrame) {
+  //   //just what is says ^^^
+  //   if (timeFrame === 'week') {
+  //     console.log('inside new function', familyMember);
+  //     //check if there is anything to plot
+  //     //I need to find this function and figure out what it does.
+  //     if (!this.pointGraph[familyMemberId]) {
+  //       return {
+  //         linePlot:[],
+  //         donutPlot: [],
+  //       };
+  //     }
+  //
+  //     //grab the points that are already computed from page load
+  //     var output = [this.pointGraph[familyMemberId].slice()];
+  //     output.unshift(this.xLabels);
+  //
+  //     return {
+  //       linePlot:output,
+  //       donutPlot: this.actionsDonut[familyMemberId], //also already computed from page load
+  //     };
+  //   } else if (false) {
+  //     //continue with the remaining conditionals
+  //   }
+  // };
 
       //-------------------------------------------------------------------
 

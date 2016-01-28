@@ -2,6 +2,8 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
 
 .controller('summaryCtrl', ['$scope', 'SummaryFactory', function($scope, SummaryFactory) {
 
+  $scope.selected = null;
+  
   $scope.mapFlag = false;
 
   $scope.showmap = function(familyInfo){
