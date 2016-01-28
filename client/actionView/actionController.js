@@ -27,12 +27,7 @@ angular.module('gaussHyrax.action', ['ngMaterial', 'ngMessages'])
   $scope.singleNote = "";  // Keep the note field blank by default
   $scope.selectedAction = null;
 
-  $scope.email = {
-    username: "",
-    familyMember: "",
-    text: "",
-  };
-
+  
   //get current username
   //get selected familyMember
 
