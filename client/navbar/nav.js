@@ -13,11 +13,25 @@ angular.module('gaussHyrax.nav', [])
     });
   };
 
+  $scope.twitterUser = function() {
+    return $http.get('/twitterinfo').then(function(response) {
+      return response.data;
+    });
+  };
+
   $scope.check = function() {
     var id = $window.localStorage.getItem('com.hyrax');
     var userID;
     if (!id) {
-      $scope.githubUser().then(function(response) {
+      // NOTE NEED TO FIX THIS
+      $scope.twitterUser().then(function(response) {
+        userID = response._id;
+        console.log(response._id);
+        $window.localStorage.setItem('com.hyrax', userID);
+        $scope.$emit('login');
+      })
+    } else {
+      $scope.twitterUser().then(function(response) {
         userID = response._id;
         console.log(response._id);
         $window.localStorage.setItem('com.hyrax', userID);
@@ -25,6 +39,8 @@ angular.module('gaussHyrax.nav', [])
       });
     }
   };
+
+
 
   $scope.check();
 }]);

@@ -3,26 +3,40 @@ var db = require('./db.js');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var passport = require('passport');
+var session = require('express-session');
 var GitHubStrategy = require('passport-github').Strategy;
+var TwitterStrategy = require('passport-twitter').Strategy;
 var env = require('node-env-file');
+
 
 
 
 env(__dirname + '/.env' || process.env);
 
 var sendgrid  = require('sendgrid')(process.env.SENDGRIDAPIKEY);
+//__:github_:__
 var GITHUB_CLIENT_ID = process.env.GITHUBCLIENTID;
 var GITHUB_CLIENT_SECRET = process.env.GITHUBCLIENTSECRET;
+//__:twitter:__
+var TWITTER_CONSUMER_KEY = process.env.TWITTERAPIKEY;
+var TWITTER_CONSUMER_SECRET = process.env.TWITTERSECRET;
+
+
+
 console.log('\n\n\nHERE IS THE GITHUB CLIENT ID', process.env.GITHUBCLIENTID, '\n\n\n');
 
 var port = process.env.PORT || 3000;
 
 var app = express();
 
+//
+
 app.use(morgan('combined'));
 app.use(express.static(__dirname + '/../client'));  //serve files in client
 app.use(bodyParser.json());  // parse application/json
+app.use(session({ secret: 'SECRET' }));
 app.use(passport.initialize());
+app.use(session());
 
 //function to configure the standard response handler
 
@@ -40,9 +54,12 @@ var configHandler = function(successCode, failCode, res) {
 /////////Passport////////////
 /////////////////////////////
 var noobyGlobalVariable;
+var noobyTwitterVariable;
 
 passport.serializeUser(function(user, done) {
-  done(null, user.id);
+  console.log('SERIALIZE user: ', user)
+  response = user.id || user
+  done(null, response);
 });
 
 passport.deserializeUser(function(id, done) {
@@ -78,6 +95,20 @@ passport.use(new GitHubStrategy({
           }
         });
       }
+    });
+  }
+));
+
+passport.use(new TwitterStrategy({
+    consumerKey: TWITTER_CONSUMER_KEY,
+    consumerSecret: TWITTER_CONSUMER_SECRET,
+    callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
+  },
+  function(token, tokenSecret, profile, done) {
+    db.User.find({ twitterId: profile.id }, function (err, user) {
+      noobyTwitterVariable = user;
+      console.log('TWITTER STRATEGY USER: ', user, '\nERROR: ', err)
+      return done(err, user);
     });
   }
 ));
@@ -118,12 +149,12 @@ app.post('/api/user', function(req, res, next) {
     text:     message,
   }, function(err, json) {
     if (err) { return console.error(err); }
-
-    console.log(json);
+      console.log(json);
   });
 })
 
-//passport
+//passport github //
+///////////////////
 .get('/auth/github',
   passport.authenticate('github'))
 
@@ -146,6 +177,34 @@ app.post('/api/user', function(req, res, next) {
     res.status(404).send();
   }
 })
+//////////////////////
+// passport twitter //
+//////////////////////
+
+.get('/auth/twitter',
+  passport.authenticate('twitter'))
+
+.get('/auth/twitter/callback',
+  passport.authenticate('twitter', { failureRedirect: '/login', scope: ['user:email'] }),
+  function(req, res) {
+    console.log('before redirecting');
+
+    // Successful authentication, redirect home.
+    console.log('data after authentication', noobyTwitterVariable);
+
+    // res.send(noobyGlobalVariable);
+    res.redirect('/#/dashboard');
+  })
+.get('/twitterinfo', function(req, res) {
+  console.log('twitterinfo', noobyTwitterVariable);
+  if (noobyTwitterVariable) {
+    res.status(200).send(noobyTwitterVariable);
+  } else {
+    res.status(404).send();
+  }
+})
+
+
 
 // find a user
 .get('/api/user/:userName/:password', function(req, res, next) {

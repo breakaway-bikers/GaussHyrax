@@ -45,5 +45,8 @@
     "passport-github": "^1.0.0",
     "sendgrid": "^2.0.0",
     "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "passport-twitter": "^1.0.3"
   }
 }
