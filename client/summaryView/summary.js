@@ -2,6 +2,8 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
 
 .controller('summaryCtrl', ['$scope', 'SummaryFactory', function($scope, SummaryFactory) {
 
+  $scope.selected = null;
+  
   $scope.mapFlag = false;
 
   $scope.showmap = function(familyInfo){
@@ -60,6 +62,11 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
     $scope.$emit('editMe');
   };
 
+  $scope.selectOption = function(value) {
+    $scope.selected = value;
+    console.log('this is the selected property: ', $scope.selected);
+  };
+
   //will change the plot to a single family member when the active member is changed (clicked on page)
   //activeFamilyMember is set by familyController
   $scope.$watch('activeFamilyMember', function() {
@@ -72,14 +79,25 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
 
 
     if ($scope.activeFamilyMember._id) {
-      var singlePlot = SummaryFactory.calculateGraphForOneFamilyMember($scope.activeFamilyMember['_id']);
+      var singlePlot = SummaryFactory.calculateGraphForOneFamilyMember($scope.activeFamilyMember._id);
+
       //this is where I can pull the whole object and not just the ID.....
-      var weeklyPlot = SummaryFactory.calculateGraphForOnewithTimeframe($scope.activeFamilyMember, 'week');
+      // var weeklyPlot = SummaryFactory.filteringHistoryPeriod($scope.activeFamilyMember);
       SummaryFactory.makeChart(singlePlot);
+
+      // SummaryFactory.makeChart(weeklyPlot);
     } else {
       console.log('cannot plot, family member not specified');
     }
   });
+
+  if ($scope.selected) {
+    $scope.$watch('activeFamilyMember', function() {
+      console.log('family mamber selected for filtering');
+      SummaryFactory.filteringHistoryPeriod($scope.activeFamilyMember);
+    });
+
+  }
 
   //will recompute all the graphs when familyData is changed
   //will also emit a points event so that family controller knows that the points were updated
