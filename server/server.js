@@ -9,7 +9,7 @@ var CronJob = require('cron').CronJob;
 
 
 
-// env(__dirname + '/.env')
+env(__dirname + '/.env')
 
 var sendgrid = require('sendgrid')(process.env.SENDGRIDAPIKEY);
 var GITHUB_CLIENT_ID = process.env.GITHUBCLIENTID;
