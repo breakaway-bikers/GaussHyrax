@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 var GitHubStrategy = require('passport-github').Strategy;
 var env = require('node-env-file');
+var CronJob = require('cron').CronJob;
 
 
 
