@@ -3,9 +3,10 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
 .controller('summaryCtrl', ['$scope', 'SummaryFactory', function($scope, SummaryFactory) {
 
   $scope.selected = null;
-  
-  $scope.mapFlag = false;
 
+  $scope.mapFlag = false;
+  $scope.eta;
+  $scope.etaFlag = false;
   $scope.showmap = function(familyInfo){
     $scope.mapFlag = !$scope.mapFlag;
     var useraddress = familyInfo.streetAddress + ',+' + familyInfo.city + ',+' + familyInfo.state;
@@ -18,19 +19,18 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
       function success(position) {
         var mapcanvas = document.createElement('div');
         mapcanvas.id = 'mapcontainer';
-        mapcanvas.style.height = '400px';
-        mapcanvas.style.width = '600px';
+        mapcanvas.style.height = '480px';
+        mapcanvas.style.width = '810px';
 
         document.querySelector('article').appendChild(mapcanvas);
         var origin = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
         var destination = new google.maps.LatLng(familyLat, familyLng);
         var options = {
-          zoom: 8,
+          zoom: 10,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         var map = new google.maps.Map(document.getElementById("mapcontainer"), options);
         directionsDisplay.setMap(map);
-        directionsDisplay.setPanel(document.getElementById('mapcontainer'));
 
         var request = {
           origin: origin,
@@ -39,9 +39,16 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
         };
         directionsService.route(request, function(response, status) {
           if (status == google.maps.DirectionsStatus.OK) {
-            directionsDisplay.setDirections(response);
+            $scope.$evalAsync(function(){
+              $scope.eta = response.routes[0].legs[0].duration.text;
+              $scope.etaFlag = !$scope.etaFlag
+              console.log('etaFlag',$scope.etaFlag);
+              console.log('eta', $scope.eta);
+              directionsDisplay.setDirections(response);
+            })
           }
         });
+        directionsDisplay.setPanel(document.getElementById('mapcontainer'));
       }
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(success);
@@ -52,6 +59,10 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
   };
   $scope.toggleMap = function(){
     $scope.mapFlag = !$scope.mapFlag;
+    if($scope.etaFlag){
+      $scope.etaFlag = false;
+      console.log($scope.etaFlag);
+    }
     console.log($scope.mapFlag);
   };
   // $scope.$on('reload', function(){

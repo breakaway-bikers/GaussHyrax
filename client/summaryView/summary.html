@@ -16,6 +16,7 @@
       </ul>
       <button ng-click="showmap(activeFamilyMember)" ng-show="!mapFlag" ng-model="activeFamilyMember">Show Distance</button>
       <button ng-click="toggleMap()" ng-show="mapFlag">Close Map</button>
+      <h3 ng-show="mapFlag">You are {{eta}} away</h3>
       <article ng-show="mapFlag">
 
       </article>
