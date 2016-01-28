@@ -205,17 +205,7 @@ angular.module('SummaryServicesModule', [])
       };
     }
 
-    //grab the points that are already computed from page load
-    var output = [this.pointGraph[familyMemberId].slice()];
-    output.unshift(this.xLabels);
-
-    return {
-      linePlot:output,
-      donutPlot: this.actionsDonut[familyMemberId], //also already computed from page load
-    };
-  };
-
-  //-----------------adding per week, month, year--------------------
+    //-----------------adding per week, month, year--------------------
   //I want to set up athe avialablity of reissuing teh graphs based on restricted dtae perameters
   //not sure if I will be making a three functions or three conditionals
 
@@ -245,7 +235,17 @@ angular.module('SummaryServicesModule', [])
     }
   };
 
-  //-------------------------------------------------------------------
+      //-------------------------------------------------------------------
+
+    //grab the points that are already computed from page load
+    var output = [this.pointGraph[familyMemberId].slice()];
+    output.unshift(this.xLabels);
+
+    return {
+      linePlot:output,
+      donutPlot: this.actionsDonut[familyMemberId], //also already computed from page load
+    };
+  };
 
   factory.addSingleEvent = function(id, historyEvent) {
     //when a user clicks save on an action, this function updates the graphs
@@ -439,6 +439,13 @@ angular.module('SummaryServicesModule', [])
         },
       });
     }
+  };
+
+  factory.getFamilyLocation = function(address) {
+    return $http.get('https://maps.googleapis.com/maps/api/geocode/json?address='+address+'&key=AIzaSyBivkEojqRHPnTzefSbWt3YGWZmW0Ozqug')
+                  .then(function(response) {
+                    return response.data;
+                  });
   };
 
   return factory;

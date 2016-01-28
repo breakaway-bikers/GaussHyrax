@@ -14,10 +14,10 @@ var env = require('node-env-file');
 env(__dirname + '/.env' || process.env);
 
 var sendgrid  = require('sendgrid')(process.env.SENDGRIDAPIKEY);
-//__:github_:__
+//__:github_:__//_
 var GITHUB_CLIENT_ID = process.env.GITHUBCLIENTID;
 var GITHUB_CLIENT_SECRET = process.env.GITHUBCLIENTSECRET;
-//__:twitter:__
+//__:twitter:__//
 var TWITTER_CONSUMER_KEY = process.env.TWITTERAPIKEY;
 var TWITTER_CONSUMER_SECRET = process.env.TWITTERSECRET;
 
