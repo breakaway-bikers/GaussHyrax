@@ -50,6 +50,7 @@ db.once('open', function() {
     userName: { type: String, index: { unique: true } },
     password: String,
     family:[FamilySchema],
+    twitter: Object,
   });
 
   //store the possible actions

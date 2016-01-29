@@ -7,6 +7,9 @@ var session = require('express-session');
 var GitHubStrategy = require('passport-github').Strategy;
 var TwitterStrategy = require('passport-twitter').Strategy;
 var env = require('node-env-file');
+var http = require('http');
+var oauthSignature = require('oauth-signature')
+var request = require('request')
 
 
 
@@ -105,10 +108,26 @@ passport.use(new TwitterStrategy({
     callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
   },
   function(token, tokenSecret, profile, done) {
-    db.User.find({ twitterId: profile.id }, function (err, user) {
-      noobyTwitterVariable = user;
-      console.log('TWITTER STRATEGY USER: ', user, '\nERROR: ', err)
-      return done(err, user);
+    db.User.findOne({ twitterId: profile.id }, function (err, user) {
+      if (user) {
+        noobyTwitterVariable = user;
+        console.log('TWITTER STRATEGY USER: ', user, '\nERROR: ', err)
+        return done(err, user);
+      } else {
+        var user = new db.User();
+        user.userName = profile.username;
+        user.twitter = {token: token, tokenSecret: tokenSecret, profile: profile}
+        user.save(function(err, user) {
+          if (err) {
+            console.log('twitter error in saving', err);
+            return done(null, user);
+          } else {
+            noobyTwitterVariable = user;
+            console.log(user + ' was saved');
+            return done(null, user);
+          }
+        });
+      }
     });
   }
 ));
@@ -177,6 +196,7 @@ app.post('/api/user', function(req, res, next) {
     res.status(404).send();
   }
 })
+
 //////////////////////
 // passport twitter //
 //////////////////////
@@ -195,6 +215,7 @@ app.post('/api/user', function(req, res, next) {
     // res.send(noobyGlobalVariable);
     res.redirect('/#/dashboard');
   })
+
 .get('/twitterinfo', function(req, res) {
   console.log('twitterinfo', noobyTwitterVariable);
   if (noobyTwitterVariable) {
@@ -203,7 +224,6 @@ app.post('/api/user', function(req, res, next) {
     res.status(404).send();
   }
 })
-
 
 
 // find a user
@@ -253,7 +273,68 @@ app.post('/api/user', function(req, res, next) {
 //delete history
 .delete('/api/history/:userId/:familyId/:historyId', function(req, res, next) {
   db.deleteHistory(req.params, configHandler(201, 400, res));
-});
+})
+
+///////////////////////////////
+// get tweets
+///////////////////////////////
+.get('/tweets/:handle', function(req, res, next){
+  console.log(req.params)
+  var options = {
+    url: "https://api.twitter.com/1.1/statuses/user_timeline.json?count=1&screen_name=" + req.params.handle,
+    "method": 'GET',
+    "Accept-Encoding": "gzip",
+    "headers": {
+      "Authorization": "Bearer " + appToken.access_token,
+    }
+  };
+  request(options, function(err, response, body){
+    // console.log(errString,'body', body);
+    res.status(200).send(JSON.parse(body)[0].text);
+  });
+})
+var appToken;
+var consumerKey = 'AtTLWwgHZaQoyK7gOAoxrPiFY';
+var consumerSecret = 'mIeUCGFeFs4vjzl2iIMWvDlBd9H2DgwH3ThuXUYj1Te4xQURo1';
+var bearerTokenCred = consumerKey + ':' + consumerSecret;
+console.log('normal', bearerTokenCred);
+
+var b = new Buffer(bearerTokenCred);
+var s = b.toString('base64');
+
+console.log('base64 encoded', s);
+// helper function creates a random nonce string
+var twitterNonce = (function() {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for(var i = 0; i < 32; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+}());
+// create a timestamp
+var timestamp = Math.floor((function() { return new Date().getTime()/1000 }()))
+// console.log('random string',twitterNonce, 'timestamp: ', timestamp)
+var options = {
+    url: "https://api.twitter.com/oauth2/token",
+    "body": "grant_type=client_credentials",
+    "method": 'POST',
+    "Accept-Encoding": "gzip",
+    "headers": {
+      "Authorization": "Basic " + s,
+      "Content-Type" : "application/x-www-form-urlencoded;charset=UTF-8",
+    }
+};
+var errString = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+callback = function(err, response, body) {
+    appToken = JSON.parse(body);
+    var tokenBuffer = new Buffer(appToken.access_token);
+    var encodedToken = tokenBuffer.toString('base64');
+    console.log('ENCODED TOKEN', encodedToken)
+
+};
+request(options, callback);
+
 
 app.listen(port);
 console.log('server listening on port ' + port + '...');
