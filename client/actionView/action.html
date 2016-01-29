@@ -4,8 +4,11 @@
 <div class="actionWrapper">
 
   <div ng-controller="actionController">
-    <p class="date">Date of your action<input type="text" ng-model="dateEntered"></p>
-
+    <!-- <p class="date">Date of your action<input type="text" ng-model="dateEntered"></p> -->
+    <md-content>
+      <h4>Standard date-picker</h4>
+      <md-datepicker ng-model="dateEntered" md-placeholder="Enter date"></md-datepicker>
+    </md-content>
     <!-- Table that lists all the action options -->
     <table class="inlinebaby">
       <tr>
@@ -13,7 +16,7 @@
       </tr>
 
       <form>
-        <!-- Used this stackoverflow post to make the clicked action be highlighted 
+        <!-- Used this stackoverflow post to make the clicked action be highlighted
         http://stackoverflow.com/questions/19331779/how-to-highlight-a-selected-row-in-ngrepeat -->
         <tr ng-class="{selected: 'Call' === selectedAction}" class="highlight">
           <td ng-click="setAction('Call', 8); setSelected('Call')">Call</td><td>8</td> <!-- Call these functions when the action is clicked-->
@@ -21,22 +24,22 @@
       </form>
       <form>
         <tr ng-class="{selected: 'Text' === selectedAction}">
-          <td ng-click="setAction('Text', 3); setSelected('Text')">Text</td><td>3</td> 
+          <td ng-click="setAction('Text', 3); setSelected('Text')">Text</td><td>3</td>
         </tr>
       </form>
       <form>
         <tr ng-class="{selected: 'Send Letter' === selectedAction}">
-          <td ng-click="setAction('Send Letter', 6); setSelected('Send Letter')" >Send Letter</td><td>6</td> 
+          <td ng-click="setAction('Send Letter', 6); setSelected('Send Letter')" >Send Letter</td><td>6</td>
         </tr>
       </form>
       <form>
         <tr ng-class="{selected: 'Send Email' === selectedAction}">
-          <td ng-click="setAction('Send Email', 4); setSelected('Send Email')">Send Email</td><td>4</td>  
+          <td ng-click="setAction('Send Email', 4); setSelected('Send Email')">Send Email</td><td>4</td>
         </tr>
       </form>
       <form>
         <tr ng-class="{selected: 'Dinner' === selectedAction}">
-          <td ng-click="setAction('Dinner', 10); setSelected('Dinner')">Dinner</td><td>10</td> 
+          <td ng-click="setAction('Dinner', 10); setSelected('Dinner')">Dinner</td><td>10</td>
         </tr>
       </form>
       <form>
@@ -69,7 +72,7 @@
           </tr>
         </form>
       </table>
-    <br> 
+    <br>
 
     <!-- User will enter the note here -->
     <div>
