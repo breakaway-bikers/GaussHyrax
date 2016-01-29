@@ -1,6 +1,6 @@
 angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
 
-.controller('summaryCtrl', ['$scope', 'SummaryFactory', function($scope, SummaryFactory) {
+.controller('summaryCtrl', ['$scope', 'SummaryFactory','$http', function($scope, SummaryFactory, $http) {
 
   $scope.selected = null;
 
@@ -11,6 +11,7 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
   $scope.showmap = function(familyInfo){
     $scope.spinner = true;
     $scope.mapFlag = !$scope.mapFlag;
+    $scope.restaurantFlag = false;
     var useraddress = familyInfo.streetAddress + ',+' + familyInfo.city + ',+' + familyInfo.state;
     console.log('The mapflag is ', $scope.mapFlag);
     SummaryFactory.getFamilyLocation(useraddress).then(function(response){
@@ -68,6 +69,37 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
     }
     console.log($scope.mapFlag);
   };
+  //Open Table integration
+  $scope.restaurantFlag = false;
+  $scope.nomList;
+
+  $scope.findRestaurants = function(familyInfo){
+    $scope.spinner = true;
+    $scope.restaurantFlag = true;
+    $scope.mapFlag = false;
+    return $http({
+              url: 'http://opentable.herokuapp.com/api/restaurants',
+              method: "GET",
+              params: {city: familyInfo.city, state: familyInfo.state}
+           }).then(function(response){
+             console.log('here are the restaurants', response);
+             $scope.$evalAsync(function(){
+               $scope.spinner = false;
+
+               $scope.nomList = response.data.restaurants;
+             });
+           });
+  };
+  $scope.restaurantToggle = function(){
+    $scope.restaurantFlag = !$scope.restaurantFlag;
+    console.log($scope.restaurantFlag);
+    if($scope.spinner){
+      $scope.spinner = false;
+    }
+  }
+  // $scope.findRestaurants({city: 'berkeley', state: 'CA'});
+
+
   // $scope.$on('reload', function(){
   // });
   //shows modal when edit button is clicked

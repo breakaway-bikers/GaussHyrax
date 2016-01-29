@@ -117,3 +117,35 @@ g .c3-axis-x .tick{
   font-size:12px;
   cursor:pointer;
 }
+.allStops {
+  position: relative;
+  /*display: inline-block;*/
+  height: 480px;
+  overflow: scroll;
+}
+
+.restaurant {
+  height: 80px;
+  margin: 10px 10px;
+}
+
+.restaurant p{
+  position: relative;
+  display: inline-block;
+}
+.nomInfo {
+  float: left;
+}
+.nomInfo p {
+    line-height: 29px;
+}
+.nomSubInfo {
+  float: right;
+}
+
+.nomSubInfo p {
+    line-height: 29px;
+}
+.nomPhoto {
+  float: left;
+}
