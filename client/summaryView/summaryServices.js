@@ -63,19 +63,25 @@ angular.module('SummaryServicesModule', [])
   };
 
   //add filter here becuase the below function is in closure.
-  var calculateC3DataForOneFamilyMember = function(familyMember, dayIdx) {
+  //////////////////////////Note///////////////////////////
+  //I'm not capturing the correct information. At some point a unknown set of values is being passed to this function and I cant track it.
+  //I'm moving on to a new feature until I can work with nick further on this.
+  var calculateC3DataForOneFamilyMember = function(familyMember, numOfDays) {
     //just what is says ^^^
 
     var actionCount = {};   //object used for quick insertion
     var actionArray = [];   //data needed to plot
     var action;             //temp variable to store single action
     var keepItGoing = false;
+
     //calculate data for line graph
     //I need to set up a conditonal to only run filter when 'days' is passed in.
     //'days' is contructed from the dropdown and will be passed in with any calculation request requiring time period.
 
     //add a filter on what is on graph
-    var filteringHistoryPeriod = function(familyMember, days) {
+    console.log('this is days inside of calculateC3', numOfDays);
+
+    var filteringHistoryPeriod = function(familyMember, numOfDays) {
       //just what is says ^^^
       var currentDate = moment();
       var filteredPeriod = [];
@@ -89,7 +95,7 @@ angular.module('SummaryServicesModule', [])
         //locating relative date..
         var difference = currentDate.diff(then, 'days');
 
-        if (difference < days) {
+        if (difference < numOfDays) {
           filteredPeriod.push(familyMember.history[i]);
 
           // filteredFamilyHi
@@ -99,9 +105,9 @@ angular.module('SummaryServicesModule', [])
       return filteredPeriod;
     };
 
-    //'this is the coditional I need to work on',
-    if (false) {
-      var filteredHistory = filteringHistoryPeriod(familyMember, days);
+    //'this is the conditional I need to work on',
+    if (numOfDays) {
+      var filteredHistory = filteringHistoryPeriod(familyMember, numOfDays);
       console.log('this is trial: ', filteredHistory);
 
       var points = calculatePointsGraphFromHistory(filteredHistory);
@@ -211,7 +217,7 @@ angular.module('SummaryServicesModule', [])
 
   //-------------------------------------------------------------------
 
-  factory.calculateGraphForSetOfFamilyMembers = function(family) {
+  factory.calculateGraphForSetOfFamilyMembers = function(family, numOfDays) {
     //just what is says ^^^
 
     //check if there is anything to plot
@@ -255,7 +261,7 @@ angular.module('SummaryServicesModule', [])
     var points = [];
     var action;
     for (var i = 0; i < family.length; i++) {
-      series  = calculateC3DataForOneFamilyMember(family[i], xIdx, dateFormat);
+      series  = calculateC3DataForOneFamilyMember(family[i], numOfDays);
 
       //push the individual series into points, which will be used to plot everyone
       points.push(series.linePlot.slice());
@@ -321,38 +327,6 @@ angular.module('SummaryServicesModule', [])
         donutPlot: [],
       };
     }
-
-    //-----------------adding per week, month, year--------------------
-  //I want to set up athe avialablity of reissuing teh graphs based on restricted dtae perameters
-  //not sure if I will be making a three functions or three conditionals
-
-  // factory.calculateGraphForOnewithTimeframe = function(familyMember, timeFrame) {
-  //   //just what is says ^^^
-  //   if (timeFrame === 'week') {
-  //     console.log('inside new function', familyMember);
-  //     //check if there is anything to plot
-  //     //I need to find this function and figure out what it does.
-  //     if (!this.pointGraph[familyMemberId]) {
-  //       return {
-  //         linePlot:[],
-  //         donutPlot: [],
-  //       };
-  //     }
-  //
-  //     //grab the points that are already computed from page load
-  //     var output = [this.pointGraph[familyMemberId].slice()];
-  //     output.unshift(this.xLabels);
-  //
-  //     return {
-  //       linePlot:output,
-  //       donutPlot: this.actionsDonut[familyMemberId], //also already computed from page load
-  //     };
-  //   } else if (false) {
-  //     //continue with the remaining conditionals
-  //   }
-  // };
-
-      //-------------------------------------------------------------------
 
     //grab the points that are already computed from page load
     var output = [this.pointGraph[familyMemberId].slice()];
@@ -559,11 +533,11 @@ angular.module('SummaryServicesModule', [])
   };
 
   factory.getFamilyLocation = function(address) {
-    return $http.get('https://maps.googleapis.com/maps/api/geocode/json?address='+address+'&key=AIzaSyBivkEojqRHPnTzefSbWt3YGWZmW0Ozqug')
+    return $http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyBivkEojqRHPnTzefSbWt3YGWZmW0Ozqug')
                   .then(function(response) {
                     return response.data;
                   });
   };
 
   return factory;
-}]);
+},]);
