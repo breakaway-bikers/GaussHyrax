@@ -1,6 +1,6 @@
 angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
 
-.controller('summaryCtrl', ['$scope', 'SummaryFactory','$http', function($scope, SummaryFactory, $http) {
+.controller('summaryCtrl', ['$scope', 'SummaryFactory', '$http', function($scope, SummaryFactory, $http) {
 
   $scope.selected = null;
 
@@ -8,7 +8,7 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
   $scope.eta;
   $scope.etaFlag = false;
   $scope.spinner = false;
-  $scope.showmap = function(familyInfo){
+  $scope.showmap = function(familyInfo) {
     $scope.spinner = true;
     $scope.mapFlag = !$scope.mapFlag;
     $scope.restaurantFlag = false;
@@ -42,16 +42,17 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
         };
         directionsService.route(request, function(response, status) {
           if (status == google.maps.DirectionsStatus.OK) {
-            $scope.$evalAsync(function(){
+            $scope.$evalAsync(function() {
               $scope.eta = response.routes[0].legs[0].duration.text;
               $scope.etaFlag = true;
               $scope.spinner = false;
-              console.log('etaFlag',$scope.etaFlag);
+              console.log('etaFlag', $scope.etaFlag);
               console.log('eta', $scope.eta);
               directionsDisplay.setDirections(response);
-            })
+            });
           }
         });
+
         directionsDisplay.setPanel(document.getElementById('mapcontainer'));
       }
 
@@ -65,42 +66,45 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
 
   $scope.toggleMap = function() {
     $scope.mapFlag = !$scope.mapFlag;
-    if($scope.etaFlag){
+    if ($scope.etaFlag) {
       $scope.etaFlag = false;
       console.log($scope.etaFlag);
     }
+
     console.log($scope.mapFlag);
   };
+
   //Open Table integration
   $scope.restaurantFlag = false;
   $scope.nomList;
 
-  $scope.findRestaurants = function(familyInfo){
+  $scope.findRestaurants = function(familyInfo) {
     $scope.spinner = true;
     $scope.restaurantFlag = true;
     $scope.mapFlag = false;
     return $http({
-              url: '//opentable.herokuapp.com/api/restaurants',
-              method: "GET",
-              params: {city: familyInfo.city, state: familyInfo.state}
-           }).then(function(response){
+      url: '//opentable.herokuapp.com/api/restaurants',
+      method: 'GET',
+      params: { city: familyInfo.city, state: familyInfo.state },
+    }).then(function(response) {
              console.log('here are the restaurants', response);
-             $scope.$evalAsync(function(){
+             $scope.$evalAsync(function() {
                $scope.spinner = false;
 
                $scope.nomList = response.data.restaurants;
              });
            });
   };
-  $scope.restaurantToggle = function(){
+
+  $scope.restaurantToggle = function() {
     $scope.restaurantFlag = !$scope.restaurantFlag;
     console.log($scope.restaurantFlag);
-    if($scope.spinner){
+    if ($scope.spinner) {
       $scope.spinner = false;
     }
   }
-  // $scope.findRestaurants({city: 'berkeley', state: 'CA'});
 
+  // $scope.findRestaurants({city: 'berkeley', state: 'CA'});
 
   // $scope.$on('reload', function(){
   // });
@@ -167,4 +171,4 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
 
   //let the familyView controller know that this controller has loaded
   $scope.$emit('summaryCtrlLoaded');
-},]);
+}, ]);

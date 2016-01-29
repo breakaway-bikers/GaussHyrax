@@ -8,7 +8,7 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 var env = require('node-env-file');
 var CronJob = require('cron').CronJob;
 
-// env(__dirname + '/.env');
+env(__dirname + '/.env');
 
 var sendgrid = require('sendgrid')(process.env.SENDGRIDAPIKEY);
 var GITHUB_CLIENT_ID = process.env.GITHUBCLIENTID;
@@ -16,13 +16,13 @@ var GITHUB_CLIENT_SECRET = process.env.GITHUBCLIENTSECRET;
 console.log('\n\n\nHERE IS THE GITHUB CLIENT ID', process.env.GITHUBCLIENTID, '\n\n\n');
 var FACEBOOK_APP_ID = process.env.FACEBOOKAPPID;
 var FACEBOOK_APP_SECRET = process.env.FACEBOOKAPPSECRET;
-console.log('\n\n\nHere is the facebook App ID', process.env.FACEBOOK_APP_ID, '\n\n\n');
+console.log('\n\n\nHere is the facebook App ID', process.env.FACEBOOKAPPID, '\n\n\n');
 
 var port = process.env.PORT || 3000;
 
 var app = express();
 
-app.use(morgan('combined'));
+// app.use(morgan('combined'));
 app.use(express.static(__dirname + '/../client'));  //serve files in client
 app.use(bodyParser.json());  // parse application/json
 app.use(passport.initialize());
@@ -45,7 +45,11 @@ var configHandler = function(successCode, failCode, res) {
 var noobyGlobalVariable;
 
 passport.serializeUser(function(user, done) {
-  done(null, user.id);
+  if (user.id) {
+    done(null, user.id);
+  } else {
+    done(null, user);
+  }
 });
 
 passport.deserializeUser(function(id, done) {
@@ -89,12 +93,32 @@ passport.use(new FacebookStrategy({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
     callbackURL: 'http://localhost:3000/auth/facebook/callback',
-    enableProof: false,
+
+    // enableProof: false,
   },
   function(accessToken, refreshToken, profile, done) {
-    User.findOrCreate({ facebookId: profile.id }, function(err, user) {
-      // console.log(user);
-      return done(err, user);
+    console.log('inside of facebook Strategy');
+    console.log(profile);
+    db.User.findOne({ userName: profile.displayName }, function(err, user) {
+      if (user) {
+        console.log('we found user', user);
+        noobyGlobalVariable = user;
+        return done(null, user);
+      } else {
+        // console.log('no user', user);
+        var user = new db.User();
+        user.userName = profile.displayName;
+        user.save(function(err, user) {
+          if (err) {
+            console.error('error in saving facebook user');
+            return done(null, false);
+          } else {
+            noobyGlobalVariable = user;
+            console.log(user + ' was saved');
+            return done(null, user);
+          }
+        });
+      }
     });
   }
 ));
@@ -171,15 +195,26 @@ app.post('/api/user', function(req, res, next) {
 )
 
 .get('/auth/facebook/callback',
-  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  passport.authenticate('facebook', { failureRedirect: '/' }),
   function(req, res) {
+    console.log('getting into auth callback');
+
     // Successful authentication, redirect home.
     res.redirect('/#/dashboard');
   })
 
-.get('/auth/facebook',
-  passport.authenticate('facebook', { scope: ['user_status', 'user_checkins'] })
-)
+// .get('/facebookInfo', function(req, res) {
+//   console.log('entered facebookUser get request', noobyGlobalVariable);
+//   if (noobyGlobalVariable) {
+//     res.status(200).send(noobyGlobalVariable);
+//   } else {
+//     res.status(404).send();
+//   }
+// })
+
+// .get('/auth/facebook',
+//   passport.authenticate('facebook', { scope: ['user_status', 'user_checkins'] })
+// )
 
 //end Facebook passport
 
