@@ -8,7 +8,7 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 var env = require('node-env-file');
 var CronJob = require('cron').CronJob;
 
-env(__dirname + '/.env');
+// env(__dirname + '/.env');
 
 var sendgrid = require('sendgrid')(process.env.SENDGRIDAPIKEY);
 var GITHUB_CLIENT_ID = process.env.GITHUBCLIENTID;
@@ -44,7 +44,7 @@ var configHandler = function (successCode, failCode, res) {
 /////////////////////////////
 var noobyGlobalVariable;
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
   if (user.id) {
     done(null, user.id);
   } else {
@@ -96,10 +96,10 @@ passport.use(new FacebookStrategy({
 
     // enableProof: false,
   },
-  function(accessToken, refreshToken, profile, done) {
+  function (accessToken, refreshToken, profile, done) {
     console.log('inside of facebook Strategy');
     console.log(profile);
-    db.User.findOne({ userName: profile.displayName }, function(err, user) {
+    db.User.findOne({ userName: profile.displayName }, function (err, user) {
       if (user) {
         console.log('we found user', user);
         noobyGlobalVariable = user;
@@ -108,7 +108,7 @@ passport.use(new FacebookStrategy({
         // console.log('no user', user);
         var user = new db.User();
         user.userName = profile.displayName;
-        user.save(function(err, user) {
+        user.save(function (err, user) {
           if (err) {
             console.error('error in saving facebook user');
             return done(null, false);
@@ -196,7 +196,7 @@ app.post('/api/user', function (req, res, next) {
 
 .get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/' }),
-  function(req, res) {
+  function (req, res) {
     console.log('getting into auth callback');
 
     // Successful authentication, redirect home.
