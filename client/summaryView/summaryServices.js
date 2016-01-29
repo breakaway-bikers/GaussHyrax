@@ -66,7 +66,7 @@ angular.module('SummaryServicesModule', [])
   //////////////////////////Note///////////////////////////
   //I'm not capturing the correct information. At some point a unknown set of values is being passed to this function and I cant track it.
   //I'm moving on to a new feature until I can work with nick further on this.
-  var calculateC3DataForOneFamilyMember = function(familyMember, dayIdx, numOfDays) {
+  var calculateC3DataForOneFamilyMember = function(familyMember, numOfDays) {
     //just what is says ^^^
 
     var actionCount = {};   //object used for quick insertion
@@ -79,6 +79,8 @@ angular.module('SummaryServicesModule', [])
     //'days' is contructed from the dropdown and will be passed in with any calculation request requiring time period.
 
     //add a filter on what is on graph
+    console.log('this is days inside of calculateC3', numOfDays);
+
     var filteringHistoryPeriod = function(familyMember, numOfDays) {
       //just what is says ^^^
       var currentDate = moment();
@@ -103,11 +105,9 @@ angular.module('SummaryServicesModule', [])
       return filteredPeriod;
     };
 
-    console.log('this is days inside of calculateC3', numOfDays);
-
     //'this is the conditional I need to work on',
-    if (false) {
-      var filteredHistory = filteringHistoryPeriod(familyMember, 7);
+    if (numOfDays) {
+      var filteredHistory = filteringHistoryPeriod(familyMember, numOfDays);
       console.log('this is trial: ', filteredHistory);
 
       var points = calculatePointsGraphFromHistory(filteredHistory);
@@ -217,7 +217,7 @@ angular.module('SummaryServicesModule', [])
 
   //-------------------------------------------------------------------
 
-  factory.calculateGraphForSetOfFamilyMembers = function(family, days) {
+  factory.calculateGraphForSetOfFamilyMembers = function(family, numOfDays) {
     //just what is says ^^^
 
     //check if there is anything to plot
@@ -228,8 +228,6 @@ angular.module('SummaryServicesModule', [])
         donutPlot: [],
       };
     }
-
-    console.log('this is days inside of calculateGraphForSetOfFamilyMembers ', days);
 
     var now = moment();
     var minDate = moment().subtract(3, 'months');  //determines min date to plot
@@ -263,7 +261,7 @@ angular.module('SummaryServicesModule', [])
     var points = [];
     var action;
     for (var i = 0; i < family.length; i++) {
-      series  = calculateC3DataForOneFamilyMember(family[i], days, xIdx, dateFormat);
+      series  = calculateC3DataForOneFamilyMember(family[i], numOfDays);
 
       //push the individual series into points, which will be used to plot everyone
       points.push(series.linePlot.slice());
@@ -542,4 +540,4 @@ angular.module('SummaryServicesModule', [])
   };
 
   return factory;
-}, ]);
+},]);

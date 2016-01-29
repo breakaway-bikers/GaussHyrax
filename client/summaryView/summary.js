@@ -83,6 +83,8 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
     if ($scope.activeFamilyMember._id) {
       var singlePlot = SummaryFactory.calculateGraphForOneFamilyMember($scope.activeFamilyMember._id);
 
+      // var thingPlot = SummaryFactory.calculateGraphForOneFamilyMember($scope.activeFamilyMember, $scope.selected);
+
       //this is where I can pull the whole object and not just the ID.....
       // var weeklyPlot = SummaryFactory.filteringHistoryPeriod($scope.activeFamilyMember);
       SummaryFactory.makeChart(singlePlot);
@@ -93,13 +95,12 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
     }
   });
 
-  if ($scope.selected) {
-    $scope.$watch('activeFamilyMember', function() {
+  $scope.$watch('selected', function() {
       console.log('family mamber selected for filtering');
-      SummaryFactory.filteringHistoryPeriod($scope.activeFamilyMember, $scope.selected);
+      var data = SummaryFactory.calculateGraphForSetOfFamilyMembers($scope.familyData, $scope.selected);
+      SummaryFactory.makeChart(data, true);
+      $scope.$emit('points', SummaryFactory.currentPointValue);
     });
-
-  }
 
   //will recompute all the graphs when familyData is changed
   //will also emit a points event so that family controller knows that the points were updated

@@ -4,10 +4,11 @@ var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var GitHubStrategy = require('passport-github').Strategy;
+var FacebookStrategy = require('passport-facebook').Strategy;
 var env = require('node-env-file');
 var CronJob = require('cron').CronJob;
 
-//env(__dirname + '/.env');
+env(__dirname + '/.env');
 
 var sendgrid = require('sendgrid')(process.env.SENDGRIDAPIKEY);
 var GITHUB_CLIENT_ID = process.env.GITHUBCLIENTID;
@@ -81,6 +82,19 @@ passport.use(new GitHubStrategy({
   }
 ));
 
+// passport.use(new FacebookStrategy({
+//     clientID: FACEBOOK_APP_ID,
+//     clientSecret: FACEBOOK_APP_SECRET,
+//     callbackURL: 'http://localhost:3000/auth/facebook/callback',
+//     enableProof: false,
+//   },
+//   function(accessToken, refreshToken, profile, done) {
+//     User.findOrCreate({ facebookId: profile.id }, function(err, user) {
+//       return done(err, user);
+//     });
+//   }
+// ));
+
 //////////////////////////////////////////
 //CREATE
 //////////////////////////////////////////
@@ -147,7 +161,25 @@ app.post('/api/user', function(req, res, next) {
   }
 })
 
-// find a user
+//Facebook passport
+.get('/auth/facebook',
+  passport.authenticate('facebook')
+)
+
+.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/#/dashboard');
+  })
+
+.get('/auth/facebook',
+  passport.authenticate('facebook', { scope: ['user_status', 'user_checkins'] })
+)
+
+//end Facebook passport
+
+  // find a user
 .get('/api/user/:userName/:password', function(req, res, next) {
   db.verifyUser(req.params, configHandler(200, 404, res));
 })
