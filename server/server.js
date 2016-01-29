@@ -3,17 +3,15 @@ var db = require('./db.js');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var passport = require('passport');
-var session = require('express-session');
 var GitHubStrategy = require('passport-github').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 var env = require('node-env-file');
 var http = require('http');
-var oauthSignature = require('oauth-signature')
 var request = require('request')
 
 // env(__dirname + '/.env');
 //
-// env(__dirname + '/.env' || process.env);
+env(__dirname + '/.env' || process.env);
 
 var sendgrid  = require('sendgrid')(process.env.SENDGRIDAPIKEY);
 //__:github_:__//_
@@ -37,9 +35,9 @@ var app = express();
 // app.use(morgan('combined'));
 app.use(express.static(__dirname + '/../client'));  //serve files in client
 app.use(bodyParser.json());  // parse application/json
-app.use(session({ secret: 'SECRET' }));
+// app.use(session({ secret: 'SECRET' }));
 app.use(passport.initialize());
-app.use(session());
+// app.use(session());
 
 //function to configure the standard response handler
 
