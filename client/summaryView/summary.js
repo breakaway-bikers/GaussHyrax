@@ -7,7 +7,9 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
   $scope.mapFlag = false;
   $scope.eta;
   $scope.etaFlag = false;
+  $scope.spinner = false;
   $scope.showmap = function(familyInfo){
+    $scope.spinner = true;
     $scope.mapFlag = !$scope.mapFlag;
     var useraddress = familyInfo.streetAddress + ',+' + familyInfo.city + ',+' + familyInfo.state;
     console.log('The mapflag is ', $scope.mapFlag);
@@ -19,7 +21,7 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
       function success(position) {
         var mapcanvas = document.createElement('div');
         mapcanvas.id = 'mapcontainer';
-        mapcanvas.style.height = '480px';
+        mapcanvas.style.height = '460px';
         mapcanvas.style.width = '810px';
 
         document.querySelector('article').appendChild(mapcanvas);
@@ -41,7 +43,8 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
           if (status == google.maps.DirectionsStatus.OK) {
             $scope.$evalAsync(function(){
               $scope.eta = response.routes[0].legs[0].duration.text;
-              $scope.etaFlag = !$scope.etaFlag
+              $scope.etaFlag = true;
+              $scope.spinner = false;
               console.log('etaFlag',$scope.etaFlag);
               console.log('eta', $scope.eta);
               directionsDisplay.setDirections(response);
@@ -116,6 +119,7 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
     console.log('familyData changed, recomputing all graphs...');
     var data = SummaryFactory.calculateGraphForSetOfFamilyMembers($scope.familyData);
     SummaryFactory.makeChart(data, true);
+
     $scope.$emit('points', SummaryFactory.currentPointValue);
   });
 

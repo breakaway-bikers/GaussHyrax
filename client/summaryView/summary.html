@@ -14,48 +14,52 @@
         <li ng-show="activeFamilyMember.city" class="email">{{activeFamilyMember.city}} {{activeFamilyMember.state}}, {{activeFamilyMember.zipcode}}</li>
         <li class="email">{{activeFamilyMember.country}}</li>
       </ul>
-      <button ng-click="showmap(activeFamilyMember)" ng-show="!mapFlag" ng-model="activeFamilyMember">Show Distance</button>
-      <button ng-click="toggleMap()" ng-show="mapFlag">Close Map</button>
-      <h3 ng-show="mapFlag">You are {{eta}} away</h3>
+      <button ng-click="showmap(activeFamilyMember)" ng-show="!mapFlag" ng-model="activeFamilyMember" style="border-radius:5px; background-color:white; opacity:0.6;font-family:Lora">Show Distance</button>
+      <button ng-click="toggleMap()" ng-show="mapFlag" style="border-radius:5px; background-color:white; opacity:0.6; font-family:Lora">Close Map</button>
+      <h3 ng-show="etaFlag" style="font-family:Lora; background-color:lightgreen; width:32%;text-align:center; margin: 0 auto; font-size: 1.3rem;">You are {{eta}} away</h3>
+      <img ng-show="spinner" src="../assets/gears.svg" style="display:block; margin: 150 auto 150 auto"/>
       <article ng-show="mapFlag">
 
       </article>
     </div>
-    <div id="chart"></div>
-    <div id="donut"></div>
+    <div ng-hide="mapFlag">
 
-    <div class="actionWrapper">
-      <!-- on the backburner, a little more complicated than anticipated -->
-      <form name="selectingTimeframe">
-      <label for="selectingTimeframe"> Select timeframe: </label><br>
-        <select name="selectingTimeframe" ng-model="selected" ng-change="selectOption(selected)">
-          <option value='7'>Last Week</option>
-          <option value='30'>Last Month</option>
-          <option value='365'>Last Year</option>
-        </select><br>
-      </form>
+      <div id="chart"></div>
+      <div id="donut"></div>
 
-      <h2>Notes</h2><div class="leftContent"><button ng-click="clearHistory(activeFamilyMember)">clear all</button></div>
-      <div class="scrollBox">
-        <ul class="actionList">
-          <li class="actionItem" ng-repeat="action in activeFamilyMember.history | orderBy:'-date'">
-              <div class="leftContent">
-                <ul>
-                  <li>{{action.date | niceDate}}<a ng-click="clearSingleEvent(action, activeFamilyMember)">        clear</a></li>
-                </ul>
-              </div>
-              <div class="rightContent">
-                <ul>
-                  <li class="action-text">{{action.action}}</li>
-                </ul>
-              </div>
-              <div class="notesContent">
-                "{{action.notes}}"
-              </div>
-          </li>
-        </ul>
+      <div class="actionWrapper">
+        <!-- on the backburner, a little more complicated than anticipated -->
+        <form name="selectingTimeframe">
+        <label for="selectingTimeframe"> Select timeframe: </label><br>
+          <select name="selectingTimeframe" ng-model="selected" ng-change="selectOption(selected)">
+            <option value='7'>Last Week</option>
+            <option value='30'>Last Month</option>
+            <option value='365'>Last Year</option>
+          </select><br>
+        </form>
+
+        <h2>Notes</h2><div class="leftContent"><button ng-click="clearHistory(activeFamilyMember)">clear all</button></div>
+        <div class="scrollBox">
+          <ul class="actionList">
+            <li class="actionItem" ng-repeat="action in activeFamilyMember.history | orderBy:'-date'">
+                <div class="leftContent">
+                  <ul>
+                    <li>{{action.date | niceDate}}<a ng-click="clearSingleEvent(action, activeFamilyMember)">        clear</a></li>
+                  </ul>
+                </div>
+                <div class="rightContent">
+                  <ul>
+                    <li class="action-text">{{action.action}}</li>
+                  </ul>
+                </div>
+                <div class="notesContent">
+                  "{{action.notes}}"
+                </div>
+            </li>
+          </ul>
+        </div>
+
       </div>
-
     </div>
   </div>
 </div>
