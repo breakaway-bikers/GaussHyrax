@@ -14,7 +14,7 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
     $scope.restaurantFlag = false;
     var useraddress = familyInfo.streetAddress + ',+' + familyInfo.city + ',+' + familyInfo.state;
     console.log('The mapflag is ', $scope.mapFlag);
-    SummaryFactory.getFamilyLocation(useraddress).then(function(response){
+    SummaryFactory.getFamilyLocation(useraddress).then(function(response) {
       var familyLat = response.results[0].geometry.location.lat;
       var familyLng = response.results[0].geometry.location.lng;
       var directionsDisplay = new google.maps.DirectionsRenderer();
@@ -29,16 +29,16 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
         var origin = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
         var destination = new google.maps.LatLng(familyLat, familyLng);
         var options = {
-          zoom: 10,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
+          zoom: 8,
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
         };
-        var map = new google.maps.Map(document.getElementById("mapcontainer"), options);
+        var map = new google.maps.Map(document.getElementById('mapcontainer'), options);
         directionsDisplay.setMap(map);
 
         var request = {
           origin: origin,
           destination: destination,
-          travelMode: google.maps.DirectionsTravelMode.DRIVING
+          travelMode: google.maps.DirectionsTravelMode.DRIVING,
         };
         directionsService.route(request, function(response, status) {
           if (status == google.maps.DirectionsStatus.OK) {
@@ -54,6 +54,7 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
         });
         directionsDisplay.setPanel(document.getElementById('mapcontainer'));
       }
+
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(success);
       } else {
@@ -61,7 +62,8 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
       }
     });
   };
-  $scope.toggleMap = function(){
+
+  $scope.toggleMap = function() {
     $scope.mapFlag = !$scope.mapFlag;
     if($scope.etaFlag){
       $scope.etaFlag = false;
@@ -117,15 +119,16 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
   //activeFamilyMember is set by familyController
   $scope.$watch('activeFamilyMember', function() {
     console.log('familyMember selected, changing graph...');
-    if($scope.mapFlag){
-      var map = document.getElementById("mapcontainer");
+    if ($scope.mapFlag) {
+      var map = document.getElementById('mapcontainer');
       document.querySelector('article').removeChild(map);
       $scope.mapFlag = !$scope.mapFlag;
     }
 
-
     if ($scope.activeFamilyMember._id) {
       var singlePlot = SummaryFactory.calculateGraphForOneFamilyMember($scope.activeFamilyMember._id);
+
+      // var thingPlot = SummaryFactory.calculateGraphForOneFamilyMember($scope.activeFamilyMember, $scope.selected);
 
       //this is where I can pull the whole object and not just the ID.....
       // var weeklyPlot = SummaryFactory.filteringHistoryPeriod($scope.activeFamilyMember);
@@ -137,19 +140,18 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
     }
   });
 
-  if ($scope.selected) {
-    $scope.$watch('activeFamilyMember', function() {
+  $scope.$watch('selected', function() {
       console.log('family mamber selected for filtering');
-      SummaryFactory.filteringHistoryPeriod($scope.activeFamilyMember);
+      var data = SummaryFactory.calculateGraphForSetOfFamilyMembers($scope.familyData, $scope.selected);
+      SummaryFactory.makeChart(data, true);
+      $scope.$emit('points', SummaryFactory.currentPointValue);
     });
-
-  }
 
   //will recompute all the graphs when familyData is changed
   //will also emit a points event so that family controller knows that the points were updated
   $scope.$on('familyChange', function(event, familyData) {
     console.log('familyData changed, recomputing all graphs...');
-    var data = SummaryFactory.calculateGraphForSetOfFamilyMembers($scope.familyData);
+    var data = SummaryFactory.calculateGraphForSetOfFamilyMembers($scope.familyData, $scope.selected);
     SummaryFactory.makeChart(data, true);
 
     $scope.$emit('points', SummaryFactory.currentPointValue);
@@ -165,4 +167,4 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
 
   //let the familyView controller know that this controller has loaded
   $scope.$emit('summaryCtrlLoaded');
-}]);
+},]);

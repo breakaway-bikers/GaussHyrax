@@ -66,7 +66,7 @@ db.once('open', function() {
   exports.User = User;
 
   //task table
-  db.collections['actions'].remove();
+  db.collections.actions.remove();
   var actions = [
     {
       action:'make call',
@@ -115,7 +115,7 @@ db.once('open', function() {
       firstName:'frodo',
       lastName:'baggins',
       nextContactDate: new Date(),
-      contactFrequency: 14,
+      contactFrequency: 1,
       history:[
         {
           action:'call',
@@ -170,7 +170,7 @@ db.once('open', function() {
     },
 
     'get id': function(user, callback) {
-      return callback(null, user['_id']);
+      return callback(null, user._id);
     },
 
     'get member': function(user, callback, properties, familyMember) {
@@ -338,7 +338,7 @@ db.once('open', function() {
       if (!user) {
         return callback('user not found', null);
       } else {
-        return callback(err, user['_id']);
+        return callback(err, user._id);
       }
     });
   };
@@ -354,6 +354,65 @@ db.once('open', function() {
   exports.getAllActions = function(callback) {
     Action.find({}, callback);
   };
+
+
+
+
+  exports.emailToDoList = function(callback){
+
+    var dateToString = function(date){
+      var day = date.getDate().toString();
+      var month = date.getMonth().toString();
+      var year = date.getFullYear().toString();
+      resultDate = month;
+      resultDate += "/" + day + "/" + year;
+      return resultDate;
+    }
+
+    var dateAndEmail = [];
+    var toDoList = [];
+    //for each family member
+    User.find({}, function (err, user){
+      for (var i = 0; i < user.length; i++){
+        var gaussUser = user[i];
+        for (var j = 0; j < user[i].family.length; j++){
+          
+          //stringify today's date, rounding down to the day
+          
+          var newDate = new Date; 
+          var nowDay = (newDate.getDate() +1).toString();
+          var nowMonth = (newDate.getMonth() + 1).toString();
+          var nowYear = newDate.getFullYear().toString();
+          var currentDate = nowMonth;
+          currentDate += '/' + nowDay;
+          currentDate += '/' + nowYear;
+          
+          var memberContactDate = gaussUser.family[j].nextContactDate;
+          
+          //stringify member contact date, rounding down to the day
+          
+          if (memberContactDate !== undefined){
+            var memberDay = memberContactDate.getDate().toString();
+            var memberMonth = (memberContactDate.getMonth() + 1).toString();
+            var memberYear = memberContactDate.getFullYear().toString();
+            memberContactDate = memberMonth;
+            memberContactDate += '/' + memberDay;
+            memberContactDate += '/' + memberYear;
+            
+            //if memberContactDate is today, push username and membername to toDoList
+            
+            if (currentDate === memberContactDate ){
+              toDoList.push([user[i].userName, memberContactDate, gaussUser.family[j].firstName])
+              // dateAndEmail.push([user[i].userName, gaussUser.family[j].nextContactDate, gaussUser.family[j].firstName]);
+            }
+          }
+        }
+      }
+    callback(toDoList);
+    });
+  };
+
+      
 
   //////////////////////////////////////////
   //UPDATE

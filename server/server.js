@@ -4,12 +4,11 @@ var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var GitHubStrategy = require('passport-github').Strategy;
+var FacebookStrategy = require('passport-facebook').Strategy;
 var env = require('node-env-file');
 var CronJob = require('cron').CronJob;
 
-
-
-env(__dirname + '/.env')
+// env(__dirname + '/.env');
 
 var sendgrid = require('sendgrid')(process.env.SENDGRIDAPIKEY);
 var GITHUB_CLIENT_ID = process.env.GITHUBCLIENTID;
@@ -83,6 +82,19 @@ passport.use(new GitHubStrategy({
   }
 ));
 
+// passport.use(new FacebookStrategy({
+//     clientID: FACEBOOK_APP_ID,
+//     clientSecret: FACEBOOK_APP_SECRET,
+//     callbackURL: 'http://localhost:3000/auth/facebook/callback',
+//     enableProof: false,
+//   },
+//   function(accessToken, refreshToken, profile, done) {
+//     User.findOrCreate({ facebookId: profile.id }, function(err, user) {
+//       return done(err, user);
+//     });
+//   }
+// ));
+
 //////////////////////////////////////////
 //CREATE
 //////////////////////////////////////////
@@ -96,6 +108,7 @@ app.post('/api/user', function(req, res, next) {
 .post('/api/family/:userId', function(req, res, next) {
   db.addFamilyMember(req.params, req.body, configHandler(201, 400, res));
   console.log('\n\n\nWE HAVE ADDED A USER\n\n\n');
+
 })
 
 //add new history to user's family member
@@ -106,13 +119,13 @@ app.post('/api/user', function(req, res, next) {
 //////////////////////////////////////////
 //READ
 //////////////////////////////////////////
-.post('/api/grid',function(req,res,next){
-    console.log('\n\n\nREQUEST RECIEVED:', req.body, '\n\n\n');
+.post('/api/grid', function(req, res, next) {
+  console.log('\n\n\nREQUEST RECIEVED:', req.body, '\n\n\n');
 
-    var email = req.body.theEmail;
-    var message = req.body.theMessage;
+  var email = req.body.theEmail;
+  var message = req.body.theMessage;
 
-    sendgrid.send({
+  sendgrid.send({
     to:       email,
     from:     'diyelpin@gmail.com',
     subject:  'Message from prsnl-2.herokuapp.com',
@@ -148,7 +161,25 @@ app.post('/api/user', function(req, res, next) {
   }
 })
 
-// find a user
+//Facebook passport
+.get('/auth/facebook',
+  passport.authenticate('facebook')
+)
+
+.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/#/dashboard');
+  })
+
+.get('/auth/facebook',
+  passport.authenticate('facebook', { scope: ['user_status', 'user_checkins'] })
+)
+
+//end Facebook passport
+
+  // find a user
 .get('/api/user/:userName/:password', function(req, res, next) {
   db.verifyUser(req.params, configHandler(200, 404, res));
 })
@@ -196,6 +227,47 @@ app.post('/api/user', function(req, res, next) {
 .delete('/api/history/:userId/:familyId/:historyId', function(req, res, next) {
   db.deleteHistory(req.params, configHandler(201, 400, res));
 });
+
+//////////////////////////////////////////
+//CRON////////////////////////////////////
+//////////////////////////////////////////
+//run daily check
+
+/* DAILY CHECK */
+
+//cron job
+//every day
+//check user end date
+//if end date === today, send email to that user
+
+var checkEndDates = function() {
+  db.emailToDoList(function(toDoList) {
+    console.log('In the callback!', toDoList);
+    if (toDoList.length > 0) {
+      for (var i = 0; i < toDoList.length; i++) {
+        var email = toDoList[i][0];
+        var memberName = toDoList[i][2];
+        var message = "It's time to contact" + memberName + ' !';
+
+        sendgrid.send({
+          to:       email,
+          from:     'diyelpin@gmail.com',
+          subject:  'Message from prsnl-2.herokuapp.com',
+          text:     message,
+        }, function(err, json) {
+          if (err) { return console.error(err); }
+
+          console.log(json);
+        });
+      }
+    }
+  });
+};
+
+var CronJob = require('cron').CronJob;
+new CronJob('* */50 16-17 * * 1-7', function() {
+  checkEndDates();
+}, null, true, 'America/Los_Angeles');
 
 app.listen(port);
 console.log('server listening on port ' + port + '...');

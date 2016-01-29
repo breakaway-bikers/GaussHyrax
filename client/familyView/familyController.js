@@ -197,7 +197,7 @@ angular.module('gaussHyrax.family', ['FamilyServices'])
       }
 
     };
-  }])
+  },])
 
 .directive('modalDialog', function() {
   return {
