@@ -1,12 +1,12 @@
 angular.module('SummaryServicesModule', [])
 
-.filter('niceDate', function () {
-  return function (input) {
+.filter('niceDate', function() {
+  return function(input) {
     return moment(input).format('MMM D, YYYY');
   };
 })
 
-.factory('SummaryFactory', ['$http', '$window', '$timeout', function ($http, $window, $timeout) {
+.factory('SummaryFactory', ['$http', '$window', '$timeout', function($http, $window, $timeout) {
 
   var dateFormat = 'MMM D, YYYY'; //used to format dates
   var chart;  //c3 line chart object
@@ -24,7 +24,7 @@ angular.module('SummaryServicesModule', [])
   factory.xLabels = [];           //will contain the x labels for the line plot in c3
 
   //helper function to calculate line graph based on the history that was stored
-  var calculatePointsGraphFromHistory = function (history) {
+  var calculatePointsGraphFromHistory = function(history) {
 
     var points = [];//stores all the points
     var lastPoints = 0; //stores the previous point value
@@ -66,7 +66,7 @@ angular.module('SummaryServicesModule', [])
   //////////////////////////Note///////////////////////////
   //I'm not capturing the correct information. At some point a unknown set of values is being passed to this function and I cant track it.
   //I'm moving on to a new feature until I can work with nick further on this.
-  var calculateC3DataForOneFamilyMember = function (familyMember, numOfDays) {
+  var calculateC3DataForOneFamilyMember = function(familyMember, numOfDays) {
     //just what is says ^^^
 
     var actionCount = {};   //object used for quick insertion
@@ -81,7 +81,7 @@ angular.module('SummaryServicesModule', [])
     //add a filter on what is on graph
     console.log('this is days inside of calculateC3', numOfDays);
 
-    var filteringHistoryPeriod = function (familyMember, numOfDays) {
+    var filteringHistoryPeriod = function(familyMember, numOfDays) {
       //just what is says ^^^
       var currentDate = moment();
       var filteredPeriod = [];
@@ -130,7 +130,7 @@ angular.module('SummaryServicesModule', [])
       }
 
       //turn actionCount object into an array, so it can be used in c3
-      var actionArray = _.map(actionCount, function (value, index) {
+      var actionArray = _.map(actionCount, function(value, index) {
         return [index, value];
       });
 
@@ -151,7 +151,7 @@ angular.module('SummaryServicesModule', [])
       }
 
       //turn actionCount object into an array, so it can be used in c3
-      var actionArray = _.map(actionCount, function (value, index) {
+      var actionArray = _.map(actionCount, function(value, index) {
         return [index, value];
       });
 
@@ -165,7 +165,7 @@ angular.module('SummaryServicesModule', [])
 
   //end of edited version.
 
-  factory.calculateGraphForSetOfFamilyMembers = function (family, numOfDays) {
+  factory.calculateGraphForSetOfFamilyMembers = function(family, numOfDays) {
     //just what is says ^^^
 
     //check if there is anything to plot
@@ -253,7 +253,7 @@ angular.module('SummaryServicesModule', [])
     points.unshift(factory.xLabels);
 
     //turn actions into an k,v pair array for c3
-    var actionArray = _.map(actions, function (value, index) {
+    var actionArray = _.map(actions, function(value, index) {
       return [index, value];
     });
 
@@ -265,7 +265,7 @@ angular.module('SummaryServicesModule', [])
 
   };
 
-  factory.calculateGraphForOneFamilyMember = function (familyMemberId) {
+  factory.calculateGraphForOneFamilyMember = function(familyMemberId) {
     //just what is says ^^^
 
     //check if there is anything to plot
@@ -286,7 +286,7 @@ angular.module('SummaryServicesModule', [])
     };
   };
 
-  factory.addSingleEvent = function (id, historyEvent) {
+  factory.addSingleEvent = function(id, historyEvent) {
     //when a user clicks save on an action, this function updates the graphs
 
     var prettyDate = moment(historyEvent.date).format(dateFormat);
@@ -344,7 +344,7 @@ angular.module('SummaryServicesModule', [])
   };
 
   //this will actually create the chart
-  factory.makeChart = function (data, refresh) {
+  factory.makeChart = function(data, refresh) {
     var xAxis;
     var rendered;
 
@@ -407,7 +407,7 @@ angular.module('SummaryServicesModule', [])
         },
         tooltip: {
           format:{
-            name: function (name, ratio, id, index) {
+            name: function(name, ratio, id, index) {
               //this brings up the data into the tooltip hover
 
               //use historyLookUp to access tasks done on this date
@@ -435,7 +435,7 @@ angular.module('SummaryServicesModule', [])
       });
 
       //zoom to the last 4 weeks
-      $timeout(function () {
+      $timeout(function() {
         if (data.linePlot[0]) {
           chart.zoom([data.linePlot[0].length - 28, data.linePlot[0].length - 1]);
         }
@@ -465,7 +465,7 @@ angular.module('SummaryServicesModule', [])
         },
         donut:{
           label:{
-            format: function (value, ratio) {
+            format: function(value, ratio) {
               return value;
             },
           },
@@ -480,22 +480,22 @@ angular.module('SummaryServicesModule', [])
     }
   };
 
-  factory.getFamilyLocation = function (address) {
+  factory.getFamilyLocation = function(address) {
     return $http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyBivkEojqRHPnTzefSbWt3YGWZmW0Ozqug')
-                  .then(function (response) {
+                  .then(function(response) {
                     return response.data;
                   });
   };
 
-  factory.getTable = function (familyInfo) {
+  factory.getTable = function(familyInfo) {
     return $http({
       url: '//opentable.herokuapp.com/api/restaurants',
       method: 'GET',
       params: { city: familyInfo.city, state: familyInfo.state },
-    }).then(function (response) {
+    }).then(function(response) {
              return response;
            });
   };
 
   return factory;
-}, ]);
+},]);
