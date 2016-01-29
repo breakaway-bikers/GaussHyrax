@@ -1,13 +1,17 @@
 angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
 
-.controller('summaryCtrl', ['$scope', 'SummaryFactory', function($scope, SummaryFactory) {
+.controller('summaryCtrl', ['$scope', 'SummaryFactory','$http', function($scope, SummaryFactory, $http) {
 
   $scope.selected = null;
 
   $scope.mapFlag = false;
-
-  $scope.showmap = function(familyInfo) {
+  $scope.eta;
+  $scope.etaFlag = false;
+  $scope.spinner = false;
+  $scope.showmap = function(familyInfo){
+    $scope.spinner = true;
     $scope.mapFlag = !$scope.mapFlag;
+    $scope.restaurantFlag = false;
     var useraddress = familyInfo.streetAddress + ',+' + familyInfo.city + ',+' + familyInfo.state;
     console.log('The mapflag is ', $scope.mapFlag);
     SummaryFactory.getFamilyLocation(useraddress).then(function(response) {
@@ -18,8 +22,8 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
       function success(position) {
         var mapcanvas = document.createElement('div');
         mapcanvas.id = 'mapcontainer';
-        mapcanvas.style.height = '400px';
-        mapcanvas.style.width = '600px';
+        mapcanvas.style.height = '460px';
+        mapcanvas.style.width = '810px';
 
         document.querySelector('article').appendChild(mapcanvas);
         var origin = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -30,7 +34,6 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
         };
         var map = new google.maps.Map(document.getElementById('mapcontainer'), options);
         directionsDisplay.setMap(map);
-        directionsDisplay.setPanel(document.getElementById('mapcontainer'));
 
         var request = {
           origin: origin,
@@ -39,9 +42,17 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
         };
         directionsService.route(request, function(response, status) {
           if (status == google.maps.DirectionsStatus.OK) {
-            directionsDisplay.setDirections(response);
+            $scope.$evalAsync(function(){
+              $scope.eta = response.routes[0].legs[0].duration.text;
+              $scope.etaFlag = true;
+              $scope.spinner = false;
+              console.log('etaFlag',$scope.etaFlag);
+              console.log('eta', $scope.eta);
+              directionsDisplay.setDirections(response);
+            })
           }
         });
+        directionsDisplay.setPanel(document.getElementById('mapcontainer'));
       }
 
       if (navigator.geolocation) {
@@ -54,8 +65,42 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
 
   $scope.toggleMap = function() {
     $scope.mapFlag = !$scope.mapFlag;
+    if($scope.etaFlag){
+      $scope.etaFlag = false;
+      console.log($scope.etaFlag);
+    }
     console.log($scope.mapFlag);
   };
+  //Open Table integration
+  $scope.restaurantFlag = false;
+  $scope.nomList;
+
+  $scope.findRestaurants = function(familyInfo){
+    $scope.spinner = true;
+    $scope.restaurantFlag = true;
+    $scope.mapFlag = false;
+    return $http({
+              url: '//opentable.herokuapp.com/api/restaurants',
+              method: "GET",
+              params: {city: familyInfo.city, state: familyInfo.state}
+           }).then(function(response){
+             console.log('here are the restaurants', response);
+             $scope.$evalAsync(function(){
+               $scope.spinner = false;
+
+               $scope.nomList = response.data.restaurants;
+             });
+           });
+  };
+  $scope.restaurantToggle = function(){
+    $scope.restaurantFlag = !$scope.restaurantFlag;
+    console.log($scope.restaurantFlag);
+    if($scope.spinner){
+      $scope.spinner = false;
+    }
+  }
+  // $scope.findRestaurants({city: 'berkeley', state: 'CA'});
+
 
   // $scope.$on('reload', function(){
   // });
@@ -108,6 +153,7 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
     console.log('familyData changed, recomputing all graphs...');
     var data = SummaryFactory.calculateGraphForSetOfFamilyMembers($scope.familyData, $scope.selected);
     SummaryFactory.makeChart(data, true);
+
     $scope.$emit('points', SummaryFactory.currentPointValue);
   });
 
