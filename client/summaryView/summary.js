@@ -78,7 +78,6 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
   $scope.restaurantFlag = false;
   $scope.nomList;
 
-
   $scope.findRestaurants = function (familyInfo) {
     $scope.spinner = true;
     $scope.restaurantFlag = true;
@@ -171,4 +170,4 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
 
   //let the familyView controller know that this controller has loaded
   $scope.$emit('summaryCtrlLoaded');
-},]);
+}, ]);
