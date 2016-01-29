@@ -14,6 +14,9 @@ var sendgrid = require('sendgrid')(process.env.SENDGRIDAPIKEY);
 var GITHUB_CLIENT_ID = process.env.GITHUBCLIENTID;
 var GITHUB_CLIENT_SECRET = process.env.GITHUBCLIENTSECRET;
 console.log('\n\n\nHERE IS THE GITHUB CLIENT ID', process.env.GITHUBCLIENTID, '\n\n\n');
+var FACEBOOK_APP_ID = process.env.FACEBOOKAPPID;
+var FACEBOOK_APP_SECRET = process.env.FACEBOOKAPPSECRET;
+console.log('\n\n\nHere is the facebook App ID', process.env.FACEBOOK_APP_ID, '\n\n\n');
 
 var port = process.env.PORT || 3000;
 
@@ -82,18 +85,19 @@ passport.use(new GitHubStrategy({
   }
 ));
 
-// passport.use(new FacebookStrategy({
-//     clientID: FACEBOOK_APP_ID,
-//     clientSecret: FACEBOOK_APP_SECRET,
-//     callbackURL: 'http://localhost:3000/auth/facebook/callback',
-//     enableProof: false,
-//   },
-//   function(accessToken, refreshToken, profile, done) {
-//     User.findOrCreate({ facebookId: profile.id }, function(err, user) {
-//       return done(err, user);
-//     });
-//   }
-// ));
+passport.use(new FacebookStrategy({
+    clientID: FACEBOOK_APP_ID,
+    clientSecret: FACEBOOK_APP_SECRET,
+    callbackURL: 'http://localhost:3000/auth/facebook/callback',
+    enableProof: false,
+  },
+  function(accessToken, refreshToken, profile, done) {
+    User.findOrCreate({ facebookId: profile.id }, function(err, user) {
+      // console.log(user);
+      return done(err, user);
+    });
+  }
+));
 
 //////////////////////////////////////////
 //CREATE
