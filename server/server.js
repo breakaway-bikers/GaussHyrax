@@ -8,7 +8,7 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 var env = require('node-env-file');
 var CronJob = require('cron').CronJob;
 
-// env(__dirname + '/.env');
+env(__dirname + '/.env');
 
 var sendgrid = require('sendgrid')(process.env.SENDGRIDAPIKEY);
 var GITHUB_CLIENT_ID = process.env.GITHUBCLIENTID;
@@ -29,8 +29,8 @@ app.use(passport.initialize());
 
 //function to configure the standard response handler
 
-var configHandler = function(successCode, failCode, res) {
-  return function(err, data) {
+var configHandler = function (successCode, failCode, res) {
+  return function (err, data) {
     if (err) {
       res.status(failCode).send(err);
     } else {
@@ -44,13 +44,13 @@ var configHandler = function(successCode, failCode, res) {
 /////////////////////////////
 var noobyGlobalVariable;
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
   done(null, user.id);
 });
 
-passport.deserializeUser(function(id, done) {
+passport.deserializeUser(function (id, done) {
   console.log('deserialize');
-  User.findById(id, function(err, user) {
+  User.findById(id, function (err, user) {
     console.log('deserializing err', err);
     done(err, user);
   });
@@ -61,8 +61,8 @@ passport.use(new GitHubStrategy({
   clientSecret: GITHUB_CLIENT_SECRET,
   callbackURL: 'https://prsnl-2.herokuapp.com/auth/github/callback',
 },
-  function(accessToken, refreshToken, profile, done) {
-    db.User.findOne({ userName: profile.username }, function(err, user) {
+  function (accessToken, refreshToken, profile, done) {
+    db.User.findOne({ userName: profile.username }, function (err, user) {
       if (user) {
         console.log('this is the user', user);
         noobyGlobalVariable = user;
@@ -70,7 +70,7 @@ passport.use(new GitHubStrategy({
       } else {
         var user = new db.User();
         user.userName = profile.username;
-        user.save(function(err, user) {
+        user.save(function (err, user) {
           if (err) {
             console.log('error in saving');
             return done(null, false);
@@ -91,8 +91,8 @@ passport.use(new FacebookStrategy({
     callbackURL: 'http://localhost:3000/auth/facebook/callback',
     enableProof: false,
   },
-  function(accessToken, refreshToken, profile, done) {
-    User.findOrCreate({ facebookId: profile.id }, function(err, user) {
+  function (accessToken, refreshToken, profile, done) {
+    User.findOrCreate({ facebookId: profile.id }, function (err, user) {
       // console.log(user);
       return done(err, user);
     });
@@ -104,26 +104,26 @@ passport.use(new FacebookStrategy({
 //////////////////////////////////////////
 
 //save a user to DB
-app.post('/api/user', function(req, res, next) {
+app.post('/api/user', function (req, res, next) {
   db.addUser(req.body, configHandler(201, 400, res));
 })
 
 //add new family member to user
-.post('/api/family/:userId', function(req, res, next) {
+.post('/api/family/:userId', function (req, res, next) {
   db.addFamilyMember(req.params, req.body, configHandler(201, 400, res));
   console.log('\n\n\nWE HAVE ADDED A USER\n\n\n');
 
 })
 
 //add new history to user's family member
-.post('/api/history/:userId/:familyId', function(req, res, next) {
+.post('/api/history/:userId/:familyId', function (req, res, next) {
   db.addHistory(req.params, req.body, configHandler(201, 400, res));
 })
 
 //////////////////////////////////////////
 //READ
 //////////////////////////////////////////
-.post('/api/grid', function(req, res, next) {
+.post('/api/grid', function (req, res, next) {
   console.log('\n\n\nREQUEST RECIEVED:', req.body, '\n\n\n');
 
   var email = req.body.theEmail;
@@ -134,7 +134,7 @@ app.post('/api/user', function(req, res, next) {
     from:     'diyelpin@gmail.com',
     subject:  'Message from prsnl-2.herokuapp.com',
     text:     message,
-  }, function(err, json) {
+  }, function (err, json) {
     if (err) { return console.error(err); }
 
     console.log(json);
@@ -147,7 +147,7 @@ app.post('/api/user', function(req, res, next) {
 
 .get('/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/login', scope: ['user:email'] }),
-  function(req, res) {
+  function (req, res) {
     console.log('before redirecting');
 
     // Successful authentication, redirect home.
@@ -156,7 +156,7 @@ app.post('/api/user', function(req, res, next) {
     // res.send(noobyGlobalVariable);
     res.redirect('/#/dashboard');
   })
-.get('/githubinfo', function(req, res) {
+.get('/githubinfo', function (req, res) {
   console.log('githubinfo', noobyGlobalVariable);
   if (noobyGlobalVariable) {
     res.status(200).send(noobyGlobalVariable);
@@ -172,7 +172,7 @@ app.post('/api/user', function(req, res, next) {
 
 .get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/login' }),
-  function(req, res) {
+  function (req, res) {
     // Successful authentication, redirect home.
     res.redirect('/#/dashboard');
   })
@@ -184,22 +184,22 @@ app.post('/api/user', function(req, res, next) {
 //end Facebook passport
 
   // find a user
-.get('/api/user/:userName/:password', function(req, res, next) {
+.get('/api/user/:userName/:password', function (req, res, next) {
   db.verifyUser(req.params, configHandler(200, 404, res));
 })
 
 //get all family info for a user
-.get('/api/family/:userId', function(req, res, next) {
+.get('/api/family/:userId', function (req, res, next) {
   db.getAllFamily(req.params, configHandler(200, 400, res));
 })
 
 //get a single family member
-.get('/api/family/:userId/:familyId', function(req, res, next) {
+.get('/api/family/:userId/:familyId', function (req, res, next) {
   db.getSingleFamilyMember(req.params, configHandler(200, 400, res));
 })
 
 //get all actions
-.get('/api/actions', function(req, res, next) {
+.get('/api/actions', function (req, res, next) {
   db.getAllActions(configHandler(200, 400, res));
 })
 
@@ -208,12 +208,12 @@ app.post('/api/user', function(req, res, next) {
 //////////////////////////////////////////
 
 //update family member
-.put('/api/family/:userId/:familyId', function(req, res, next) {
+.put('/api/family/:userId/:familyId', function (req, res, next) {
   db.updateFamilyMember(req.params, req.body, configHandler(201, 400, res));
 })
 
 //update history member
-.put('/api/history/:userId/:familyId/:historyId', function(req, res, next) {
+.put('/api/history/:userId/:familyId/:historyId', function (req, res, next) {
   db.updateHistory(req.params, req.body, configHandler(201, 400, res));
 })
 
@@ -222,13 +222,13 @@ app.post('/api/user', function(req, res, next) {
 //////////////////////////////////////////
 
 //delete family member
-.delete('/api/family/:userId/:familyId', function(req, res, next) {
+.delete('/api/family/:userId/:familyId', function (req, res, next) {
   db.deleteFamilyMember(req.params, configHandler(201, 400, res));
 
 })
 
 //delete history
-.delete('/api/history/:userId/:familyId/:historyId', function(req, res, next) {
+.delete('/api/history/:userId/:familyId/:historyId', function (req, res, next) {
   db.deleteHistory(req.params, configHandler(201, 400, res));
 });
 
@@ -244,8 +244,8 @@ app.post('/api/user', function(req, res, next) {
 //check user end date
 //if end date === today, send email to that user
 
-var checkEndDates = function() {
-  db.emailToDoList(function(toDoList) {
+var checkEndDates = function () {
+  db.emailToDoList(function (toDoList) {
     console.log('In the callback!', toDoList);
     if (toDoList.length > 0) {
       for (var i = 0; i < toDoList.length; i++) {
@@ -258,7 +258,7 @@ var checkEndDates = function() {
           from:     'diyelpin@gmail.com',
           subject:  'Message from prsnl-2.herokuapp.com',
           text:     message,
-        }, function(err, json) {
+        }, function (err, json) {
           if (err) { return console.error(err); }
 
           console.log(json);
@@ -269,7 +269,7 @@ var checkEndDates = function() {
 };
 
 var CronJob = require('cron').CronJob;
-new CronJob('* */50 16-17 * * 1-7', function() {
+new CronJob('* */50 16-17 * * 1-7', function () {
   checkEndDates();
 }, null, true, 'America/Los_Angeles');
 
