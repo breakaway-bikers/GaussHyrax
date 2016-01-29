@@ -8,8 +8,9 @@ var env = require('node-env-file');
 var CronJob = require('cron').CronJob;
 
 
+//env(__dirname + '/.env');
 
-// env(__dirname + '/.env')
+
 
 var sendgrid = require('sendgrid')(process.env.SENDGRIDAPIKEY);
 var GITHUB_CLIENT_ID = process.env.GITHUBCLIENTID;
@@ -96,6 +97,7 @@ app.post('/api/user', function(req, res, next) {
 .post('/api/family/:userId', function(req, res, next) {
   db.addFamilyMember(req.params, req.body, configHandler(201, 400, res));
   console.log('\n\n\nWE HAVE ADDED A USER\n\n\n');
+
 })
 
 //add new history to user's family member
@@ -197,5 +199,65 @@ app.post('/api/user', function(req, res, next) {
   db.deleteHistory(req.params, configHandler(201, 400, res));
 });
 
+
+//////////////////////////////////////////
+//CRON////////////////////////////////////
+//////////////////////////////////////////
+//run daily check
+
+/* DAILY CHECK */
+  //cron job
+    //every day
+      //check user end date
+      //if end date === today, send email to that user
+
+var checkEndDates = function(){
+  db.emailToDoList(function(toDoList){
+    console.log('In the callback!', toDoList );
+    if ( toDoList.length > 0 ) {
+      for (var i = 0; i < toDoList.length; i++){
+        var email = toDoList[i][0];
+        var memberName = toDoList[i][2];
+        var message = "It's time to contact" + memberName + " !";
+
+        sendgrid.send({
+          to:       email,
+          from:     'diyelpin@gmail.com',
+          subject:  'Message from prsnl-2.herokuapp.com',
+          text:     message,
+        }, function(err, json) {
+          if (err) { return console.error(err); }
+
+          console.log(json);
+        });
+      }
+    }
+  });
+};
+
+var CronJob = require('cron').CronJob;
+new CronJob('*/8 * 16-18 * * 1-7', function() {
+  checkEndDates();
+}, null, true, 'America/Los_Angeles');
+
+
+
+
 app.listen(port);
 console.log('server listening on port ' + port + '...');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
