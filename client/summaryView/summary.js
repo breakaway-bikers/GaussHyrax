@@ -80,7 +80,7 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
     $scope.restaurantFlag = true;
     $scope.mapFlag = false;
     return $http({
-              url: 'http://opentable.herokuapp.com/api/restaurants',
+              url: '//opentable.herokuapp.com/api/restaurants',
               method: "GET",
               params: {city: familyInfo.city, state: familyInfo.state}
            }).then(function(response){
