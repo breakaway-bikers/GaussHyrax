@@ -7,11 +7,11 @@ var GitHubStrategy = require('passport-github').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 var env = require('node-env-file');
 var http = require('http');
-
-// var oauthSignature = require('oauth-signature');
 var request = require('request');
 
-env(__dirname + '/.env' || process.env);
+// env(__dirname + '/.env');
+//
+// env(__dirname + '/.env' || process.env);
 
 var sendgrid  = require('sendgrid')(process.env.SENDGRIDAPIKEY);
 var GITHUB_CLIENT_ID = process.env.GITHUBCLIENTID;
