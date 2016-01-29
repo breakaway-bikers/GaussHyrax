@@ -102,7 +102,7 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
     if ($scope.spinner) {
       $scope.spinner = false;
     }
-  }
+  };
 
   // $scope.findRestaurants({city: 'berkeley', state: 'CA'});
 
@@ -127,6 +127,8 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
       var map = document.getElementById('mapcontainer');
       document.querySelector('article').removeChild(map);
       $scope.mapFlag = !$scope.mapFlag;
+      $scope.etaFlag = false;
+      $scope.restaurantFlag = false;
     }
 
     if ($scope.activeFamilyMember._id) {
