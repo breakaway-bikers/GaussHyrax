@@ -7,9 +7,7 @@ var GitHubStrategy = require('passport-github').Strategy;
 var env = require('node-env-file');
 var CronJob = require('cron').CronJob;
 
-
-
-// env(__dirname + '/.env')
+env(__dirname + '/.env');
 
 var sendgrid = require('sendgrid')(process.env.SENDGRIDAPIKEY);
 var GITHUB_CLIENT_ID = process.env.GITHUBCLIENTID;
@@ -106,13 +104,13 @@ app.post('/api/user', function(req, res, next) {
 //////////////////////////////////////////
 //READ
 //////////////////////////////////////////
-.post('/api/grid',function(req,res,next){
-    console.log('\n\n\nREQUEST RECIEVED:', req.body, '\n\n\n');
+.post('/api/grid', function(req, res, next) {
+  console.log('\n\n\nREQUEST RECIEVED:', req.body, '\n\n\n');
 
-    var email = req.body.theEmail;
-    var message = req.body.theMessage;
+  var email = req.body.theEmail;
+  var message = req.body.theMessage;
 
-    sendgrid.send({
+  sendgrid.send({
     to:       email,
     from:     'diyelpin@gmail.com',
     subject:  'Message from prsnl-2.herokuapp.com',

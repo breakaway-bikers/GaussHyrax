@@ -66,7 +66,7 @@ db.once('open', function() {
   exports.User = User;
 
   //task table
-  db.collections['actions'].remove();
+  db.collections.actions.remove();
   var actions = [
     {
       action:'make call',
@@ -170,7 +170,7 @@ db.once('open', function() {
     },
 
     'get id': function(user, callback) {
-      return callback(null, user['_id']);
+      return callback(null, user._id);
     },
 
     'get member': function(user, callback, properties, familyMember) {
@@ -338,7 +338,7 @@ db.once('open', function() {
       if (!user) {
         return callback('user not found', null);
       } else {
-        return callback(err, user['_id']);
+        return callback(err, user._id);
       }
     });
   };
