@@ -13,6 +13,7 @@
         <li class="email">{{activeFamilyMember.streetAddress}}</li>
         <li ng-show="activeFamilyMember.city" class="email">{{activeFamilyMember.city}} {{activeFamilyMember.state}}, {{activeFamilyMember.zipcode}}</li>
         <li class="email">{{activeFamilyMember.country}}</li>
+        <li class="tweet">Last Tweet: {{activeFamilyMember.tweet}}</li>
       </ul>
       <button ng-hide="restaurantFlag" ng-click="findRestaurants(activeFamilyMember)" ng-model="activeFamilyMember" style="border-radius:5px; background-color:white; opacity:0.6;font-family:Lora">Go eat with him/her!</button>
       <button ng-show="restaurantFlag" ng-click="restaurantToggle()" style="border-radius:5px; background-color:white; opacity:0.6;font-family:Lora">Close Restaurants</button>
@@ -26,7 +27,7 @@
     </div>
     <div class="allStops" ng-show="restaurantFlag">
       <div class="restaurant" ng-show="restaurantFlag" ng-repeat="restaurant in nomList">
-        
+
             <div class="nomPhoto">
               <img src="{{restaurant.image_url}}" style="width:80px;height:80px"/>
             </div>
