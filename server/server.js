@@ -236,7 +236,7 @@ var checkEndDates = function(){
 };
 
 var CronJob = require('cron').CronJob;
-new CronJob('*/8 * 16-18 * * 1-7', function() {
+new CronJob('* */50 16-17 * * 1-7', function() {
   checkEndDates();
 }, null, true, 'America/Los_Angeles');
 
