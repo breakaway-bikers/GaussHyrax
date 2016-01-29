@@ -13,15 +13,14 @@
 
     <div class="loginError" ng-show="showLoginError">{{errorMessage}}</div>
       <a href="https://prsnl-2.herokuapp.com/auth/github/callback"><img class="github" src="../assets/github.png" /></a>
-      <!-- <div ng-controller='facebookController'> -->
 
-      <!-- <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
-    </fb:login-button>
-
-    <div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="false" data-auto-logout-link="false"></div>
-
-    <div id="status">
-    </div> -->
-    <!-- </div> -->
+      <div>
+        <a href="//localhost:3000/auth/facebook/callback">
+        <p style="border:2px solid;border-radius:5px;background-color:white;width:80%;margin: auto">
+          <span><img src="https://www.seeklogo.net/wp-content/uploads/2011/06/facebook-icon-logo-vector.png" height="40" width="40"></span>
+          <span style="text-align:center">Sign up using facebook</span>
+        </p>
+        </a>
+      </div>
   </div>
 </div>

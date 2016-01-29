@@ -165,58 +165,6 @@ angular.module('SummaryServicesModule', [])
 
   //end of edited version.
 
-  //////////////////adding filter for time period////////////////////
-  //-----------------adding per week, month, year--------------------
-  //I want to set up athe availablity to reissue the graphs based on restricted date perameters
-  //not sure if I will be making a three functions or three conditionals
-  //
-  // factory.filteringHistoryPeriod = function(familyMember) {
-  //   //just what is says ^^^
-  //   var currentDate = moment();
-  //   var weeklyHistory = [];
-  //   var monthlyHistory = [];
-  //   var annualHistory = [];
-  //   console.log('two arguments', familyMember);
-  //   historyLookUp[familyMember._id] = {};
-  //
-  //   for (var i = 0; i < familyMember.history.length; i++) {
-  //     var then = moment(familyMember.history[i].date);
-  //
-  //     //locating relative date..
-  //     var difference = currentDate.diff(then, 'days');
-  //
-  //     if (difference < 7) {
-  //       weeklyHistory.push(familyMember.history[i]);
-  //     }
-  //
-  //     if (difference < 30) {
-  //       monthlyHistory.push(familyMember.history[i]);
-  //     }
-  //
-  //     if (difference < 365) {
-  //       annualHistory.push(familyMember.history[i]);
-  //     }
-  //
-  //   };
-  //
-  //   // console.log('weekly: ', weeklyHistory)
-  //   // console.log('monthly: ', monthlyHistory)
-  //   // console.log('annually: ', annualHistory);
-  //   // if (selection === 'weekly') {
-  //   //   return weeklyHistory;
-  //   // }
-  //   //
-  //   // if (selection === 'monthly') {
-  //   //   return monthlyHistory;
-  //   // }
-  //   //
-  //   // if (selection === 'annually') {
-  //   //   return annualHistory;
-  //   // }
-  // };
-
-  //-------------------------------------------------------------------
-
   factory.calculateGraphForSetOfFamilyMembers = function(family, numOfDays) {
     //just what is says ^^^
 
