@@ -25,7 +25,7 @@
 
     <div class="large">
       <label for="Email">Email *</label>
-      <input type="email" name="email" ng-model="member.email" required>
+      <input type="email" name="email" ng-model="member.email" ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" required>
     </div>
 
     <div class="large">

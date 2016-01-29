@@ -2,6 +2,7 @@ angular.module('gaussHyrax.family', ['FamilyServices'])
 
 .controller('familyController', ['$scope', '$window', 'FamilyFactory',
   function($scope, $window, FamilyFactory) {
+
     var everybody = {
       firstName:'Everybody',
     };
@@ -195,7 +196,7 @@ angular.module('gaussHyrax.family', ['FamilyServices'])
       }
 
     };
-  }])
+  },])
 
 .directive('modalDialog', function() {
   return {
