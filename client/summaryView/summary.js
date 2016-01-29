@@ -170,4 +170,4 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
 
   //let the familyView controller know that this controller has loaded
   $scope.$emit('summaryCtrlLoaded');
-}, ]);
+},]);

@@ -12,8 +12,8 @@ var oauthSignature = require('oauth-signature')
 var request = require('request')
 
 // env(__dirname + '/.env');
-
-env(__dirname + '/.env' || process.env);
+//
+// env(__dirname + '/.env' || process.env);
 
 var sendgrid  = require('sendgrid')(process.env.SENDGRIDAPIKEY);
 //__:github_:__//_
