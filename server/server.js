@@ -68,7 +68,7 @@ passport.use(new GitHubStrategy({
   function (accessToken, refreshToken, profile, done) {
     db.User.findOne({ userName: profile.username }, function (err, user) {
       if (user) {
-        console.log('this is the user', user);
+        //console.log('this is the user', user);
         noobyGlobalVariable = user;
         return done(null, user);
       } else {
@@ -80,7 +80,7 @@ passport.use(new GitHubStrategy({
             return done(null, false);
           } else {
             noobyGlobalVariable = user;
-            console.log(user + ' was saved');
+            //console.log(user + ' was saved');
             return done(null, user);
           }
         });
@@ -92,7 +92,7 @@ passport.use(new GitHubStrategy({
 passport.use(new FacebookStrategy({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
-    callbackURL: 'http://localhost:3000/auth/facebook/callback',
+    callbackURL: 'https://prsnl-2.herokuapp.com/auth/facebook/callback',
 
     // enableProof: false,
   },
@@ -101,7 +101,7 @@ passport.use(new FacebookStrategy({
     console.log(profile);
     db.User.findOne({ userName: profile.displayName }, function (err, user) {
       if (user) {
-        console.log('we found user', user);
+        //console.log('we found user', user);
         noobyGlobalVariable = user;
         return done(null, user);
       } else {
@@ -114,7 +114,7 @@ passport.use(new FacebookStrategy({
             return done(null, false);
           } else {
             noobyGlobalVariable = user;
-            console.log(user + ' was saved');
+            //console.log(user + ' was saved');
             return done(null, user);
           }
         });
@@ -181,7 +181,7 @@ app.post('/api/user', function (req, res, next) {
     res.redirect('/#/dashboard');
   })
 .get('/githubinfo', function (req, res) {
-  console.log('githubinfo', noobyGlobalVariable);
+  // console.log('githubinfo', noobyGlobalVariable);
   if (noobyGlobalVariable) {
     res.status(200).send(noobyGlobalVariable);
   } else {
@@ -195,7 +195,7 @@ app.post('/api/user', function (req, res, next) {
 )
 
 .get('/auth/facebook/callback',
-  passport.authenticate('facebook', { failureRedirect: '/' }),
+  passport.authenticate('facebook', { failureRedirect: '/login' }),
   function (req, res) {
     console.log('getting into auth callback');
 
@@ -212,9 +212,9 @@ app.post('/api/user', function (req, res, next) {
 //   }
 // })
 
-// .get('/auth/facebook',
-//   passport.authenticate('facebook', { scope: ['user_status', 'user_checkins'] })
-// )
+.get('/auth/facebook',
+  passport.authenticate('facebook', { scope: ['user_status', 'user_checkins'] })
+)
 
 //end Facebook passport
 
