@@ -19,7 +19,7 @@
       <button ng-show="restaurantFlag" ng-click="restaurantToggle()" style="border-radius:5px; background-color:white; opacity:0.6;font-family:Lora">Close Restaurants</button>
       <button ng-click="showmap(activeFamilyMember)" ng-show="!mapFlag" ng-model="activeFamilyMember" style="border-radius:5px; background-color:white; opacity:0.6;font-family:Lora">Go see what they're doing!</button>
       <button ng-click="toggleMap()" ng-show="mapFlag" style="border-radius:5px; background-color:white; opacity:0.6; font-family:Lora">It's not worth it</button>
-      <h3 ng-show="etaFlag" style="font-family:Lora; background-color:lightgreen; width:45%;text-align:center; margin: 0 auto; font-size: 1.3rem;">You are {{eta}} away from creeping</h3>
+      <h3 ng-show="etaFlag" ng-model="activeFamilyMember" style="font-family:Lora; background-color:lightgreen; width:45%;text-align:center; margin: 0 auto; font-size: 1.3rem;">You are {{eta}} away from {{activeFamilyMember.firstName}}</h3>
       <img ng-show="spinner" src="../assets/gears.svg" style="display:block; margin: 150 auto 150 auto"/>
       <article ng-show="mapFlag">
 
