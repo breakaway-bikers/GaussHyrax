@@ -498,13 +498,14 @@ angular.module('SummaryServicesModule', [])
   };
 
   factory.getTweet = function (user) {
-    return $http({
-      url: '/tweets/' + user.twitterHandle,
-      method: 'GET',
-    }).then(function (response) {
-      return response;
-    });
-  };
+    console.log('getting tweets from: ', user)
+      return $http({
+        url: '/tweets/' + user.twitterHandle,
+        method: 'GET',
+      }).then(function (response) {
+        return response;
+      });
+    };
 
   return factory;
 },]);

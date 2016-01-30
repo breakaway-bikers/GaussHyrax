@@ -13,8 +13,8 @@
         <li class="email">{{activeFamilyMember.streetAddress}}</li>
         <li ng-show="activeFamilyMember.city" class="email">{{activeFamilyMember.city}} {{activeFamilyMember.state}}, {{activeFamilyMember.zipcode}}</li>
         <li class="email">{{activeFamilyMember.country}}</li>
-        <li class="tweet">Last Tweet: {{activeFamilyMember.tweet}}</li>
       </ul>
+      <div class="tweet"><h4><strong>Last Tweet:</strong></h4> {{activeFamilyMember.tweet}}</div>
       <button ng-hide="restaurantFlag" ng-click="findRestaurants(activeFamilyMember)" ng-model="activeFamilyMember" style="border-radius:5px; background-color:white; opacity:0.6;font-family:Lora">Go eat with him/her!</button>
       <button ng-show="restaurantFlag" ng-click="restaurantToggle()" style="border-radius:5px; background-color:white; opacity:0.6;font-family:Lora">Close Restaurants</button>
       <button ng-click="showmap(activeFamilyMember)" ng-show="!mapFlag" ng-model="activeFamilyMember" style="border-radius:5px; background-color:white; opacity:0.6;font-family:Lora">Go see what they're doing!</button>
