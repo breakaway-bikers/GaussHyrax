@@ -45,6 +45,7 @@ db.once('open', function () {
     contactFrequency: Number,   //number of days till next task
     history:[RelationshipHistorySchema],
     image: String,
+    twitterHandle: String,
   });
 
   var UserSchema = mongoose.Schema({

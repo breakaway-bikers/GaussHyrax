@@ -255,7 +255,7 @@ app.post('/api/user', function (req, res, next) {
 .get('/tweets/:handle', function (req, res, next) {
   console.log(req.params);
   var options = {
-    url: 'https://api.twitter.com/1.1/statuses/user_timeline.json?count=10&screen_name=' + req.params.handle,
+    url: 'https://api.twitter.com/1.1/statuses/user_timeline.json?count=1&screen_name=' + req.params.handle,
     method: 'GET',
     'Accept-Encoding': 'gzip',
     headers: {
@@ -264,7 +264,7 @@ app.post('/api/user', function (req, res, next) {
   };
   request(options, function (err, response, body) {
     // console.log(errString,'body', body);
-    res.status(200).send(JSON.parse(body));
+    res.status(200).send(JSON.parse(body)[0]);
   });
 });
 
