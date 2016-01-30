@@ -92,7 +92,7 @@ passport.use(new GitHubStrategy({
 passport.use(new FacebookStrategy({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
-    callbackURL: 'http://localhost:3000/auth/facebook/callback',
+    callbackURL: 'https://prsnl-2.herokuapp.com/auth/facebook/callback',
 
     // enableProof: false,
   },
@@ -179,7 +179,7 @@ app.post('/api/user', function (req, res, next) {
 )
 
 .get('/auth/facebook/callback',
-  passport.authenticate('facebook', { failureRedirect: '/' }),
+  passport.authenticate('facebook', { failureRedirect: '/login' }),
   function (req, res) {
     // Successful authentication, redirect home.
     res.redirect('/#/dashboard');
@@ -194,9 +194,9 @@ app.post('/api/user', function (req, res, next) {
 //   }
 // })
 
-// .get('/auth/facebook',
-//   passport.authenticate('facebook', { scope: ['user_status', 'user_checkins'] })
-// )
+.get('/auth/facebook',
+  passport.authenticate('facebook', { scope: ['user_status', 'user_checkins'] })
+)
 
 //end Facebook passport
 
