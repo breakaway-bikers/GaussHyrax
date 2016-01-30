@@ -128,6 +128,14 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
       $scope.restaurantFlag = false;
     }
 
+    console.log($scope.activeFamilyMember);
+    if ($scope.activeFamilyMember.twitterHandle) {
+      SummaryFactory.getTweet($scope.activeFamilyMember).then(function (res) {
+        console.log('TWEET', res.data.text);
+        $scope.activeFamilyMember.tweet = res.data.text;
+      });
+    }
+
     if ($scope.activeFamilyMember._id) {
       var singlePlot = SummaryFactory.calculateGraphForOneFamilyMember($scope.activeFamilyMember._id);
 
@@ -170,4 +178,4 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
 
   //let the familyView controller know that this controller has loaded
   $scope.$emit('summaryCtrlLoaded');
-}, ]);
+},]);

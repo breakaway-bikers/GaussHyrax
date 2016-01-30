@@ -4,7 +4,7 @@
 <!-- Remember to add "gaussHyraxx.newFamilyMember" to the config file. remove ng controller when routes are created -->
 
 <div class="container">
-<h1>New Member</h1>
+<h1>New Subject</h1>
 <div class="members" ng-controller='memberCtrl'>
   <form class="familyMember" >
 
@@ -58,6 +58,11 @@
       <input type="text" name="image" ng-model="member.image">
     </div>
 
+    <div class="small">
+      <label for="twitter">twitter *</label>
+      <input type="text" name="twitter" ng-model="member.twitterHandle">
+    </div>
+
     <div class="frequency" >
       <span ng-model="slider_toggle.value">Contact Frequency: {{ slider_toggle.value }}</span>
     </div>
@@ -71,9 +76,9 @@
     rz-slider-options="slider_toggle.options"></rzslider>
   </div>
 
-    <input type="submit" ng-show="savebtn" value="Add Member" ng-click="saveMember()" >
-    <input type="submit" ng-show="updatebtn" value="Update" ng-click="update()" >
-    <input type="submit" ng-show="deletebtn" value="Delete" ng-click="delete()" >
+    <input type="button" ng-show="savebtn" value="Add Member" ng-click="saveMember()" >
+    <input type="button" ng-show="updatebtn" value="Update" ng-click="update()" >
+    <input type="button" ng-show="deletebtn" value="Delete" ng-click="delete()" >
 
   </form>
 </div>

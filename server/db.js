@@ -5,9 +5,10 @@ var passport = require('passport');
 var GitHubStrategy = require('passport-github').Strategy;
 
 // mongoose.connect('mongodb://localhost/hyrax');
+
 // mongoose.connect('mongodb://ksiddana:itsmeagain@ds049925.mongolab.com:49925/hyrax');
 // var mongoURI = 'mongodb://diyelpin:Beansandburrito1600@ds047335.mongolab.com:47335/heroku_ws06b5hx';
-var mongoURI = 'mongodb://diyelpin:Beansandburrito1600@ds051595.mongolab.com:51595/heroku_14zh7mth';
+// var mongoURI = 'mongodb://diyelpin:Beansandburrito1600@ds051595.mongolab.com:51595/heroku_14zh7mth';
 mongoose.connect(process.env.MONGOLAB_URI || mongoURI);
 var db = mongoose.connection;
 
@@ -15,7 +16,7 @@ var exports = module.exports;
 
 db.on('error', console.error.bind(console, 'connection error:'));
 
-db.once('open', function() {
+db.once('open', function () {
   console.log('db connected!');
 
   // information about a family member
@@ -44,12 +45,14 @@ db.once('open', function() {
     contactFrequency: Number,   //number of days till next task
     history:[RelationshipHistorySchema],
     image: String,
+    twitterHandle: String,
   });
 
   var UserSchema = mongoose.Schema({
     userName: { type: String, index: { unique: true } },
     password: String,
     family:[FamilySchema],
+    twitter: Object,
   });
 
   //store the possible actions
@@ -66,7 +69,7 @@ db.once('open', function() {
   exports.User = User;
 
   //task table
-  db.collections.actions.remove();
+  db.collections['actions'].remove();
   var actions = [
     {
       action:'make call',
@@ -115,7 +118,7 @@ db.once('open', function() {
       firstName:'frodo',
       lastName:'baggins',
       nextContactDate: new Date(),
-      contactFrequency: 1,
+      contactFrequency: 14,
       history:[
         {
           action:'call',
@@ -165,37 +168,37 @@ db.once('open', function() {
 
   //handles the different possible 'action' values
   var performActionOnUser = {
-    'get family': function(user, callback) {
+    'get family': function (user, callback) {
       return callback(null, user.family);
     },
 
-    'get id': function(user, callback) {
-      return callback(null, user._id);
+    'get id': function (user, callback) {
+      return callback(null, user['_id']);
     },
 
-    'get member': function(user, callback, properties, familyMember) {
+    'get member': function (user, callback, properties, familyMember) {
       return callback(null, familyMember);
     },
 
-    'add family': function(user, callback, properties) {
+    'add family': function (user, callback, properties) {
       user.family.push(properties);
-      user.save(function(err, user) {
+      user.save(function (err, user) {
         return callback(err, user.family[user.family.length - 1]);
       });
     },
 
-    'update family': function(user, callback, properties, familyMember) {
+    'update family': function (user, callback, properties, familyMember) {
       if (!familyMember) {
         return callback('update family: a family id must be provided', null);
       }
 
       _.extend(familyMember, properties);
-      user.save(function(err, user) {
+      user.save(function (err, user) {
         return callback(err, familyMember);
       });
     },
 
-    'add history':function(user, callback, properties, familyMember) {
+    'add history':function (user, callback, properties, familyMember) {
       if (!familyMember) {
         return callback('add history: a family id must be provided', null);
       }
@@ -209,56 +212,56 @@ db.once('open', function() {
       }
 
       //save it!
-      user.save(function(err, user) {
+      user.save(function (err, user) {
         return callback(err, { nextContactDate: familyMember.nextContactDate, historyItem:familyMember.history[familyMember.history.length - 1] });
       });
 
     },
 
-    'delete family': function(user, callback, properties, familyMember) {
+    'delete family': function (user, callback, properties, familyMember) {
       if (!familyMember) {
         return callback('add history: a family id must be provided', null);
       }
 
-      user.family = _.reject(user.family, function(user) {
+      user.family = _.reject(user.family, function (user) {
         return user === familyMember;
       });
 
-      user.save(function(err, user) {
+      user.save(function (err, user) {
         return callback(err, familyMember);
       });
     },
 
-    'update history': function(user, callback, properties, familyMember, historyEvent) {
+    'update history': function (user, callback, properties, familyMember, historyEvent) {
       if (!historyEvent) {
         return callback('update history: a history id must be provided', null);
       }
 
       _.extend(historyEvent, properties);
-      user.save(function(err, user) {
+      user.save(function (err, user) {
         return callback(err, historyEvent);
       });
     },
 
-    'delete history': function(user, callback, properties, familyMember, historyEvent) {
+    'delete history': function (user, callback, properties, familyMember, historyEvent) {
       if (!historyEvent) {
         return callback('delete history: a history id must be provided', null);
       }
 
-      familyMember.history = _.reject(familyMember.history, function(event) {
+      familyMember.history = _.reject(familyMember.history, function (event) {
         return event === historyEvent;
       });
 
-      user.save(function(err, user) {
+      user.save(function (err, user) {
         return callback(err, historyEvent);
       });
     },
   };
 
   //function to handle accessing a user document
-  var accessUserById = function(ids, action, properties, callback) {
+  var accessUserById = function (ids, action, properties, callback) {
 
-    return User.findOne({ _id:ids.userId }, 'family', function(err, user) {
+    return User.findOne({ _id:ids.userId }, 'family', function (err, user) {
 
       //check for error and make sure we have a valid user
       if (err) {
@@ -271,7 +274,7 @@ db.once('open', function() {
       var familyMember;
 
       if (ids.familyId) {
-        familyMember = _.find(user.family, function(family) {
+        familyMember = _.find(user.family, function (family) {
           return family._id.toString() === ids.familyId;
         });
 
@@ -284,7 +287,7 @@ db.once('open', function() {
       var historyEvent;
 
       if (ids.historyId && familyMember) {
-        historyEvent = _.find(familyMember.history, function(history) {
+        historyEvent = _.find(familyMember.history, function (history) {
           return history._id.toString() === ids.historyId;
         });
 
@@ -304,7 +307,7 @@ db.once('open', function() {
   //CREATE
   //////////////////////////////////////////
 
-  exports.addUser = function(userObj, callback) {
+  exports.addUser = function (userObj, callback) {
 
     //user validation
     if (!userObj.password) {
@@ -315,16 +318,16 @@ db.once('open', function() {
 
     var user = new User(userObj);
 
-    user.save(function(err, user) {
+    user.save(function (err, user) {
       return callback(err, user);
     });
   };
 
-  exports.addFamilyMember = function(idObj, familyObj, callback) {
+  exports.addFamilyMember = function (idObj, familyObj, callback) {
     return accessUserById(idObj, 'add family', familyObj, callback);
   };
 
-  exports.addHistory = function(idObj, historyObj, callback) {
+  exports.addHistory = function (idObj, historyObj, callback) {
     return accessUserById(idObj, 'add history', historyObj, callback);
   };
 
@@ -332,107 +335,107 @@ db.once('open', function() {
   //READ
   //////////////////////////////////////////
 
-  exports.verifyUser = function(userObj, callback) {
+  exports.verifyUser = function (userObj, callback) {
 
-    User.findOne(userObj, '_id', function(err, user) {
+    User.findOne(userObj, '_id', function (err, user) {
       if (!user) {
         return callback('user not found', null);
       } else {
-        return callback(err, user._id);
+        return callback(err, user['_id']);
       }
     });
   };
 
-  exports.getAllFamily = function(idObj, callback) {
+  exports.getAllFamily = function (idObj, callback) {
     return accessUserById(idObj, 'get family', {}, callback);
   };
 
-  exports.getSingleFamilyMember = function(idObj, callback) {
+  exports.getSingleFamilyMember = function (idObj, callback) {
     return accessUserById(idObj, 'get member', {}, callback);
   };
 
-  exports.getAllActions = function(callback) {
+  exports.getAllActions = function (callback) {
     Action.find({}, callback);
-  };
-
-  exports.emailToDoList = function(callback) {
-
-    var dateToString = function(date) {
-      var day = date.getDate().toString();
-      var month = date.getMonth().toString();
-      var year = date.getFullYear().toString();
-      resultDate = month;
-      resultDate += '/' + day + '/' + year;
-      return resultDate;
-    };
-
-    var dateAndEmail = [];
-    var toDoList = [];
-
-    //for each family member
-    User.find({}, function(err, user) {
-      for (var i = 0; i < user.length; i++) {
-        var gaussUser = user[i];
-        for (var j = 0; j < user[i].family.length; j++) {
-
-          //stringify today's date, rounding down to the day
-
-          var newDate = new Date;
-          var nowDay = (newDate.getDate() + 1).toString();
-          var nowMonth = (newDate.getMonth() + 1).toString();
-          var nowYear = newDate.getFullYear().toString();
-          var currentDate = nowMonth;
-          currentDate += '/' + nowDay;
-          currentDate += '/' + nowYear;
-
-          var memberContactDate = gaussUser.family[j].nextContactDate;
-
-          //stringify member contact date, rounding down to the day
-
-          if (memberContactDate !== undefined) {
-            var memberDay = memberContactDate.getDate().toString();
-            var memberMonth = (memberContactDate.getMonth() + 1).toString();
-            var memberYear = memberContactDate.getFullYear().toString();
-            memberContactDate = memberMonth;
-            memberContactDate += '/' + memberDay;
-            memberContactDate += '/' + memberYear;
-
-            //if memberContactDate is today, push username and membername to toDoList
-
-            if (currentDate === memberContactDate) {
-              toDoList.push([user[i].userName, memberContactDate, gaussUser.family[j].firstName]);
-
-              // dateAndEmail.push([user[i].userName, gaussUser.family[j].nextContactDate, gaussUser.family[j].firstName]);
-            }
-          }
-        }
-      }
-
-      callback(toDoList);
-    });
   };
 
   //////////////////////////////////////////
   //UPDATE
   //////////////////////////////////////////
 
-  exports.updateFamilyMember = function(idObj, familyObj, callback) {
+  exports.updateFamilyMember = function (idObj, familyObj, callback) {
     return accessUserById(idObj, 'update family', familyObj, callback);
   };
 
-  exports.updateHistory = function(idObj, historyObj, callback) {
+  exports.updateHistory = function (idObj, historyObj, callback) {
     return accessUserById(idObj, 'update history', historyObj, callback);
+  };
+
+  exports.emailToDoList = function (callback) {
+
+    var dateToString = function (date) {
+        var day = date.getDate().toString();
+        var month = date.getMonth().toString();
+        var year = date.getFullYear().toString();
+        resultDate = month;
+        resultDate += '/' + day + '/' + year;
+        return resultDate;
+      };
+
+    var dateAndEmail = [];
+    var toDoList = [];
+
+    //for each family member
+    User.find({}, function (err, user) {
+        for (var i = 0; i < user.length; i++) {
+          var gaussUser = user[i];
+          for (var j = 0; j < user[i].family.length; j++) {
+
+            //stringify today's date, rounding down to the day
+
+            var newDate = new Date;
+            var nowDay = (newDate.getDate() + 1).toString();
+            var nowMonth = (newDate.getMonth() + 1).toString();
+            var nowYear = newDate.getFullYear().toString();
+            var currentDate = nowMonth;
+            currentDate += '/' + nowDay;
+            currentDate += '/' + nowYear;
+
+            var memberContactDate = gaussUser.family[j].nextContactDate;
+
+            //stringify member contact date, rounding down to the day
+
+            if (memberContactDate !== undefined) {
+              var memberDay = memberContactDate.getDate().toString();
+              var memberMonth = (memberContactDate.getMonth() + 1).toString();
+              var memberYear = memberContactDate.getFullYear().toString();
+              memberContactDate = memberMonth;
+              memberContactDate += '/' + memberDay;
+              memberContactDate += '/' + memberYear;
+
+              //if memberContactDate is today, push username and membername to toDoList
+
+              if (currentDate === memberContactDate) {
+                toDoList.push([user[i].userName, memberContactDate, gaussUser.family[j].firstName]);
+
+                // dateAndEmail.push([user[i].userName, gaussUser.family[j].nextContactDate, gaussUser.family[j].firstName]);
+              }
+            }
+          }
+        }
+
+        callback(toDoList);
+      });
   };
 
   //////////////////////////////////////////
   //DELETE
   //////////////////////////////////////////
 
-  exports.deleteFamilyMember = function(idObj, callback) {
+  exports.deleteFamilyMember = function (idObj, callback) {
     return accessUserById(idObj, 'delete family', {}, callback);
   };
 
-  exports.deleteHistory = function(idObj, callback) {
+  exports.deleteHistory = function (idObj, callback) {
     return accessUserById(idObj, 'delete history', {}, callback);
   };
 
