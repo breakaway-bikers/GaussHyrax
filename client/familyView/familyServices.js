@@ -12,8 +12,6 @@ angular.module('FamilyServices', [])
       url: '/api/family/' + id,
     })
     .then(function(res) {
-      console.log('Getting the Family Members from with USER ID: ', id);
-      console.log('this is the res obj, inside of getAllFamilyMembers', res);
       return res;
     });
   },
@@ -29,27 +27,9 @@ angular.module('FamilyServices', [])
       data: memberObj,
     })
     .then(function(res) {
-      console.log('Response from the saveUser PUT Request: ', res);
       return res.data;
     });
   };
-
-  //this is another update by Juan...
-  //attempting to make a get request for only specific history date informaton.
-  // familyFactory.getWeeklydata = function(id) {
-  //
-  //   return $http({
-  //     method: 'GET',
-  //     url: '/api/family/' + id,
-  //   })
-  //   .then(function(res) {
-  //     console.log('Getting the Family Members from with USER ID: ', id);
-  //     console.log('this is the res obj, inside of getAllFamilyMembers', res);
-  //     return res;
-  //   });
-  // };
-
-  //this attempting to intergrate an api....Juan
 
   return familyFactory;
 

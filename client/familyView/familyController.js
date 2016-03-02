@@ -12,7 +12,6 @@ angular.module('gaussHyrax.family', ['FamilyServices'])
     $scope.activeFamilyMember = {
       firstName:'Everybody',
     };
-    console.log('this is the activeFamilyMember', $scope.activeFamilyMember);
 
     $scope.plusNewMember = function() {
       $scope.toggleModal();
@@ -70,12 +69,10 @@ angular.module('gaussHyrax.family', ['FamilyServices'])
     });
 
     $scope.$on('removeFam', function(event, id) {
-      console.log('removing user from familyData');
 
       //remove user from the list so it does not show in the UI
       for (var i = 0; i < $scope.familyData.length; i++) {
         if ($scope.familyData[i]._id === id) {
-          console.log('deleting', id);
           $scope.familyData.splice(i, 1);
 
         }
@@ -117,9 +114,6 @@ angular.module('gaussHyrax.family', ['FamilyServices'])
           }, 0);
         });
 
-        // let the summaryView know that there are new things to graph
-        console.log('new family data loaded');
-
         // Broadcast an event to the Summary Controller, to listen for "familyChange"
         $scope.$broadcast('familyChange', $scope.familyData);
 
@@ -136,7 +130,6 @@ angular.module('gaussHyrax.family', ['FamilyServices'])
       eachFamilyMember.nextContactDate = moment(eachFamilyMember.nextContactDate).format('MMM DD YYYY');
 
       if (moment.duration(moment(eachFamilyMember.nextContactDate).diff(eachFamilyMember.date)).days() < 3) {
-        console.log('Change the border on loading color');
         eachFamilyMember.urgency = '#D62728;';  // RED COLOR
       } else if (moment.duration(moment(eachFamilyMember.nextContactDate).diff(eachFamilyMember.date)).days() < 10 &&
           moment.duration(moment(eachFamilyMember.nextContactDate).diff(eachFamilyMember.date)).days() >= 3) {
@@ -155,8 +148,6 @@ angular.module('gaussHyrax.family', ['FamilyServices'])
     // When the user clicks the Family Member, we want to update the Summary View, to show the
     // interactions with that family Member and show the individual Graph, Points and Donut Graph.
     $scope.singleFamilyMemberInfo = function(familyMemberObj) {
-      console.log('this is the single familyMemberObj', familyMemberObj);
-
       //change the $scope.activeFamilyMember so that a $watch event will fire
       $scope.activeFamilyMember = familyMemberObj;
     };
@@ -169,27 +160,20 @@ angular.module('gaussHyrax.family', ['FamilyServices'])
     //----------this is Juan's Addition-------------
     //this visually clears the not notes in the app. I need to now send this info to the database and make sure all teh listeners are capturing it.
     $scope.clearHistory = function(familyMemberObj) {
-      //console.log('pre clearing', familyMemberObj.history);
       familyMemberObj.history = [];
 
-      //console.log('post emptying array', familyMemberObj);
       $scope.$broadcast('familyChange', familyMemberObj);
       FamilyFactory.updateMember(familyMemberObj);
     };
 
     $scope.clearSingleEvent = function(action, familyMemberObj) {
-      //I need to pass in the active user obj so I can access the history array and splice out this item
-      // console.log(action);
-      // console.log(familyMemberObj);
       var removed;
       var action = action._id;
       var familyMemberHistory = familyMemberObj.history;
 
       for (var i = 0; i < familyMemberHistory.length; i++) {
         if (action === familyMemberHistory[i]._id) {
-          //console.log('found it!', familyMemberObj[i]);
           familyMemberObj.history.splice(i, 1);
-          console.log(familyMemberObj);
           $scope.$broadcast('familyChange', familyMemberObj);
           FamilyFactory.updateMember(familyMemberObj);
         }
