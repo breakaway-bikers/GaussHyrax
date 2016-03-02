@@ -13,7 +13,6 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
     $scope.mapFlag = !$scope.mapFlag;
     $scope.restaurantFlag = false;
     var useraddress = familyInfo.streetAddress + ',+' + familyInfo.city + ',+' + familyInfo.state;
-    console.log('The mapflag is ', $scope.mapFlag);
     SummaryFactory.getFamilyLocation(useraddress).then(function (response) {
       var familyLat = response.results[0].geometry.location.lat;
       var familyLng = response.results[0].geometry.location.lng;
@@ -46,8 +45,6 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
               $scope.eta = response.routes[0].legs[0].duration.text;
               $scope.etaFlag = true;
               $scope.spinner = false;
-              console.log('etaFlag', $scope.etaFlag);
-              console.log('eta', $scope.eta);
               directionsDisplay.setDirections(response);
             });
           }
@@ -68,10 +65,7 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
     $scope.mapFlag = !$scope.mapFlag;
     if ($scope.etaFlag) {
       $scope.etaFlag = false;
-      console.log($scope.etaFlag);
     }
-
-    console.log($scope.mapFlag);
   };
 
   //Open Table integration
@@ -84,10 +78,8 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
     $scope.mapFlag = false;
     SummaryFactory.getTable(familyInfo)
       .then(function (response) {
-        console.log('here are the restaurants', response);
         $scope.$evalAsync(function () {
           $scope.spinner = false;
-
           $scope.nomList = response.data.restaurants;
         });
       });
@@ -95,17 +87,11 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
 
   $scope.restaurantToggle = function () {
     $scope.restaurantFlag = !$scope.restaurantFlag;
-    console.log($scope.restaurantFlag);
     if ($scope.spinner) {
       $scope.spinner = false;
     }
   };
 
-  // $scope.findRestaurants({city: 'berkeley', state: 'CA'});
-
-  // $scope.$on('reload', function(){
-  // });
-  //shows modal when edit button is clicked
   $scope.editMember = function () {
     $scope.$parent.toggleModal();
     $scope.$emit('editMe');
@@ -113,13 +99,11 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
 
   $scope.selectOption = function (value) {
     $scope.selected = value;
-    console.log('this is the selected property: ', $scope.selected);
   };
 
   //will change the plot to a single family member when the active member is changed (clicked on page)
   //activeFamilyMember is set by familyController
   $scope.$watch('activeFamilyMember', function () {
-    console.log('familyMember selected, changing graph...');
     if ($scope.mapFlag) {
       var map = document.getElementById('mapcontainer');
       document.querySelector('article').removeChild(map);
@@ -128,10 +112,8 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
       $scope.restaurantFlag = false;
     }
 
-    console.log($scope.activeFamilyMember);
     if ($scope.activeFamilyMember.twitterHandle) {
       SummaryFactory.getTweet($scope.activeFamilyMember).then(function (res) {
-        console.log('TWEET', res.data.text);
         $scope.activeFamilyMember.tweet = res.data.text;
       });
     }
@@ -139,20 +121,15 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
     if ($scope.activeFamilyMember._id) {
       var singlePlot = SummaryFactory.calculateGraphForOneFamilyMember($scope.activeFamilyMember._id);
 
-      // var thingPlot = SummaryFactory.calculateGraphForOneFamilyMember($scope.activeFamilyMember, $scope.selected);
-
       //this is where I can pull the whole object and not just the ID.....
       // var weeklyPlot = SummaryFactory.filteringHistoryPeriod($scope.activeFamilyMember);
       SummaryFactory.makeChart(singlePlot);
 
       // SummaryFactory.makeChart(weeklyPlot);
-    } else {
-      console.log('cannot plot, family member not specified');
     }
   });
 
   $scope.$watch('selected', function () {
-      console.log('family mamber selected for filtering');
       var data = SummaryFactory.calculateGraphForSetOfFamilyMembers($scope.familyData, $scope.selected);
       SummaryFactory.makeChart(data, true);
       $scope.$emit('points', SummaryFactory.currentPointValue);
@@ -161,7 +138,6 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
   //will recompute all the graphs when familyData is changed
   //will also emit a points event so that family controller knows that the points were updated
   $scope.$on('familyChange', function (event, familyData) {
-    console.log('familyData changed, recomputing all graphs...');
     var data = SummaryFactory.calculateGraphForSetOfFamilyMembers($scope.familyData, $scope.selected);
     SummaryFactory.makeChart(data, true);
 
@@ -171,7 +147,6 @@ angular.module('gaussHyrax.summary', ['SummaryServicesModule'])
   //will add a single event to be graphed when a new action is saved in the actionView
   //will also emit a points event so that family controller knows that the points were updated
   $scope.$on('updateGraph', function (event, famMemberId, historyEvent) {
-    console.log('heard history in summary summaryCtrl');
     SummaryFactory.addSingleEvent(famMemberId, historyEvent);
     $scope.$emit('points', SummaryFactory.currentPointValue);
   });
