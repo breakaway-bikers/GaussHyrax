@@ -22,7 +22,6 @@ angular.module('gaussHyrax.login', ['LoginServices'])
     }
 
     UserFactory.saveUser($scope.user).then(function(res) {
-      console.log(res);
       $window.localStorage.setItem('com.hyrax', res.data['_id']);
 
       //emit login event so familyController can fetch data
@@ -33,7 +32,6 @@ angular.module('gaussHyrax.login', ['LoginServices'])
 
       $scope.showLoginError = true;
       $scope.errorMessage = 'Cannot create. This user already exists.';
-      console.log('user create failed', err);
     });
 
   };
@@ -47,7 +45,6 @@ angular.module('gaussHyrax.login', ['LoginServices'])
     }
 
     UserFactory.verifyUser($scope.user).then(function(res) {
-      console.log(res);
 
       //save user id in local storage
       $window.localStorage.setItem('com.hyrax', res.data);
@@ -57,7 +54,6 @@ angular.module('gaussHyrax.login', ['LoginServices'])
 
         //emit login event so familyController can fetch data
         $scope.$emit('login');
-        console.log('changing location');
 
         //emit an event to the parent familyController to display the usernaem on login
         $scope.$emit('userLoggedIn', $scope.user.userName);
@@ -70,7 +66,6 @@ angular.module('gaussHyrax.login', ['LoginServices'])
 
       $scope.showLoginError = true;
       $scope.errorMessage = 'Login failed!';
-      console.log('login failed', err);
     });
   };
 
