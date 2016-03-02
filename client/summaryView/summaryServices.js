@@ -79,14 +79,11 @@ angular.module('SummaryServicesModule', [])
     //'days' is contructed from the dropdown and will be passed in with any calculation request requiring time period.
 
     //add a filter on what is on graph
-    console.log('this is days inside of calculateC3', numOfDays);
-
     var filteringHistoryPeriod = function (familyMember, numOfDays) {
       //just what is says ^^^
       var currentDate = moment();
       var filteredPeriod = [];
 
-      console.log('two arguments inside inside', familyMember);
       historyLookUp[familyMember._id] = {};
 
       for (var i = 0; i < familyMember.history.length; i++) {
@@ -108,7 +105,6 @@ angular.module('SummaryServicesModule', [])
     //'this is the conditional I need to work on',
     if (numOfDays) {
       var filteredHistory = filteringHistoryPeriod(familyMember, numOfDays);
-      console.log('this is trial: ', filteredHistory);
 
       var points = calculatePointsGraphFromHistory(filteredHistory);
       var keepItGoing = true;
@@ -498,7 +494,6 @@ angular.module('SummaryServicesModule', [])
   };
 
   factory.getTweet = function (user) {
-    console.log('getting tweets from: ', user)
       return $http({
         url: '/tweets/' + user.twitterHandle,
         method: 'GET',
