@@ -7,19 +7,8 @@ angular.module('gaussHyrax.action', ['ngMaterial', 'ngMessages'])
   $scope.dateEntered = moment($scope.myDate).format('MMM DD YYYY');
   $scope.datePicked = function(){
     $scope.dateEntered = moment($scope.myDate).format('MMM DD YYYY');
-    console.log($scope.dateEntered);
   }
-  // $scope.minDate = new Date(
-  //   $scope.myDate.getFullYear(),
-  //   $scope.myDate.getMonth() - 2,
-  //   $scope.myDate.getDate()
-  // );
-  // console.log('mindate', $scope.minDate);
-  // $scope.maxDate = new Date(
-  //   $scope.myDate.getFullYear(),
-  //   $scope.myDate.getMonth() + 2,
-  //   $scope.myDate.getDate()
-  // );
+
   // Default values
   $scope.actionArray = [];
   $scope.selectedAction = "Click an action";
@@ -60,8 +49,6 @@ angular.module('gaussHyrax.action', ['ngMaterial', 'ngMessages'])
   //Invoked when the actionView send button is clicked
   $scope.sendEmail = function(emailAddress, message){
 
-    console.log('emailAddress:', emailAddress, 'Message:', message);
-
     var emailObj = {
       theSender: "Prsnl",
       theEmail: emailAddress,
@@ -73,16 +60,12 @@ angular.module('gaussHyrax.action', ['ngMaterial', 'ngMessages'])
       url : '/api/grid',
       data : emailObj,
       headers: {'Content-Type': 'application/json'}
-    })
-    .then(function(res) {
-      console.log('\n\n\nGET REQUEST SENT!', res, '\n\n\n');
-    })
+    });
   };
 
 
   // Invoked when the actionView submit button is clicked
   $scope.saveAction = function(someAction, pointValue, dateOccured, someNote){
-    console.log('dateOccured', dateOccured)
     if (someAction === null){
       $scope.noActionYet = "No action selected."
       return
