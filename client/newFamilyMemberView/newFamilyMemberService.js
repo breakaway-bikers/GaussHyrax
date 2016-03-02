@@ -29,7 +29,6 @@ angular.module('newFamilyMemberServices', ['angular-md5'])
 
     //Raph NOTE end
 
-    console.log('this is memberObj: ', memberObj);
     return $http({
       method: 'POST',
       url: '/api/family/' + $window.localStorage.getItem('com.hyrax'),
@@ -39,7 +38,6 @@ angular.module('newFamilyMemberServices', ['angular-md5'])
       data: memberObj,
     })
     .then(function (res) {
-      console.log('Response from the saveUser POST Request: ', res);
       return res.data;
     });
   };
@@ -62,7 +60,6 @@ angular.module('newFamilyMemberServices', ['angular-md5'])
       data: memberObj,
     })
     .then(function (res) {
-      console.log('Response from the saveUser PUT Request: ', res);
       return res.data;
     });
   };
@@ -73,7 +70,6 @@ angular.module('newFamilyMemberServices', ['angular-md5'])
       url: '/api/family/' + $window.localStorage.getItem('com.hyrax') + '/' + memberObj._id,
     })
     .then(function (res) {
-      console.log('Response from the saveUser DELETE Request: ', res);
       return res.data;
     });
   };
