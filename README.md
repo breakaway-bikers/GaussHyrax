@@ -1,7 +1,7 @@
 # Prsnl
 Manage the people in your life.
 
-![prsnl-ui](http://imgur.com/jEv2ZeB)
+<img src="readme_imgs/prsnl-ui.png"/>
 
 ##Why
 
@@ -18,12 +18,12 @@ For each of your business client, you specify some contact info (optional) and a
 
 Once a client is successfully added, they will appear in your family list (see picture below).
 
-![family-view](http://imgur.com/sI9s1bg)
+<img src="readme_imgs/family-view.png"/>
 
 ###Adding Interactions
 By clicking on the arrow next to each client, an action pane opens and you can select an action, add some notes about that interaction, and save it (see picture below).  
 
-![action-view](http://imgur.com/YtygzxA)
+<img src="readme_imgs/action-view.png"/>
 
 Each interaction has an assigned point value.  A small interaction such as a text message, will not earn as much points as a large interaction, such as sharing a meal together.  
 
