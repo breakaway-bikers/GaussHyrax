@@ -1,7 +1,7 @@
 # Prsnl
 Manage the people in your life.
 
-![prsnl-ui](https://github.com/Courageous-Climbers/GaussHyrax/blob/master/readme_imgs/prsnl-ui.png?raw=true)
+![prsnl-ui](https://github.com/breakaway-bikers/GaussHyrax/blob/master/readme_imgs/prsnl-ui.png?raw=true)
 
 ##Why
 
@@ -18,12 +18,12 @@ For each of your business client, you specify some contact info (optional) and a
 
 Once a client is successfully added, they will appear in your family list (see picture below).
 
-![family-view](https://github.com/Courageous-Climbers/GaussHyrax/blob/master/readme_imgs/family-view.png?raw=true)
+![family-view](https://github.com/breakaway-bikers/GaussHyrax/blob/master/readme_imgs/family-view.png?raw=true)
 
 ###Adding Interactions
 By clicking on the arrow next to each client, an action pane opens and you can select an action, add some notes about that interaction, and save it (see picture below).  
 
-![action-view](https://github.com/Courageous-Climbers/GaussHyrax/blob/master/readme_imgs/action-view.png?raw=true)
+![action-view](https://github.com/breakaway-bikers/GaussHyrax/blob/master/readme_imgs/action-view.png?raw=true)
 
 Each interaction has an assigned point value.  A small interaction such as a text message, will not earn as much points as a large interaction, such as sharing a meal together.  
 
