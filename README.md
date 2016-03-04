@@ -1,4 +1,4 @@
-# Prsnl
+# <a href="https://prsnl-2.herokuapp.com">Prsnl</a>
 Manage the people in your life.
 
 <img src="readme_imgs/prsnl-ui.png"/>
